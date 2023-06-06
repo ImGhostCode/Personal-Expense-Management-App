@@ -50,7 +50,7 @@ List<Transaction> getTransactionToday() {
       result.add(transactions[i]);
     }
   }
-  print(result);
+
   return result;
 }
 
@@ -64,7 +64,6 @@ List<Transaction> getTransactionWeek() {
       result.add(transactions[i]);
     }
   }
-  print(result);
 
   return result;
 }
@@ -78,7 +77,6 @@ List<Transaction> getTransactionMonth() {
       result.add(transactions[i]);
     }
   }
-  print(result);
 
   return result;
 }
@@ -92,7 +90,43 @@ List<Transaction> getTransactionYear() {
       result.add(transactions[i]);
     }
   }
-  print(result);
 
   return result;
+}
+
+int totalChart(List<Transaction> transactions) {
+  List listAmount = [0, 0];
+  for (var i = 0; i < transactions.length; i++) {
+    listAmount.add(transactions[i].type == 'Income'
+        ? int.parse(transactions[i].amount)
+        : int.parse(transactions[i].amount) * -1);
+  }
+  totals = listAmount.reduce((value, element) => value + element);
+  return totals;
+}
+
+List time(List<Transaction> transactions, bool hour) {
+  List<Transaction> a = [];
+  List total = [];
+  int counter = 0;
+  for (var c = 0; c < transactions.length; c++) {
+    for (var i = c; i < transactions.length; i++) {
+      if (hour) {
+        if (transactions[i].datetime.hour == transactions[c].datetime.hour) {
+          a.add(transactions[i]);
+          counter = i;
+        }
+      } else {
+        if (transactions[i].datetime.day == transactions[c].datetime.day) {
+          a.add(transactions[i]);
+          counter = i;
+        }
+      }
+    }
+    total.add(totalChart(a));
+    a.clear();
+    c = counter;
+  }
+  print(total);
+  return total;
 }

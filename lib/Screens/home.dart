@@ -1,8 +1,6 @@
-import 'package:expanse_management/data/list_money.dart';
 import 'package:expanse_management/data/utilty.dart';
 import 'package:expanse_management/models/transaction.dart';
 import 'package:flutter/material.dart';
-import 'package:expanse_management/Constants/color.dart';
 import 'package:hive_flutter/adapters.dart';
 
 class Home extends StatefulWidget {
@@ -98,7 +96,7 @@ class _HomeState extends State<Home> {
         ),
       ),
       subtitle: Text(
-        '${days[transactionHistory.datetime.weekday - 1]}  ${transactionHistory.datetime.day}-${transactionHistory.datetime.month}-${transactionHistory.datetime.year}',
+        '${days[transactionHistory.datetime.weekday - 1]}  ${transactionHistory.datetime.day}/${transactionHistory.datetime.month}/${transactionHistory.datetime.year}',
         style: const TextStyle(
           fontWeight: FontWeight.w600,
         ),
@@ -199,7 +197,7 @@ Stack _head() {
           ),
           child: Column(
             children: [
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 child: Row(
