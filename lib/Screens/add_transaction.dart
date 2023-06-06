@@ -1,5 +1,7 @@
 import 'package:expanse_management/Constants/color.dart';
+import 'package:expanse_management/models/transaction.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 class AddScreen extends StatefulWidget {
   const AddScreen({super.key});
@@ -9,6 +11,7 @@ class AddScreen extends StatefulWidget {
 }
 
 class _AddScreenState extends State<AddScreen> {
+  final box = Hive.box<Transaction>('data');
   DateTime date = DateTime.now();
   String? selectedCategoryItem;
   String? selectedTypeItem;
@@ -26,9 +29,11 @@ class _AddScreenState extends State<AddScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     explainFocus.addListener(() {
+      setState(() {});
+    });
+    amountFocus.addListener(() {
       setState(() {});
     });
   }
@@ -89,7 +94,34 @@ class _AddScreenState extends State<AddScreen> {
 
   GestureDetector addTransaction() {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        if (selectedCategoryItem == null ||
+            selectedTypeItem == null ||
+            explainC.text.isEmpty ||
+            amountC.text.isEmpty) {
+          // Display an error message or show a snackbar indicating missing fields
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Error'),
+              content: const Text('Please fill in all the fields.'),
+              actions: [
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          );
+          return;
+        }
+        var newTransaction = Transaction(selectedTypeItem!, amountC.text, date,
+            explainC.text, selectedCategoryItem!);
+        box.add(newTransaction);
+        Navigator.of(context).pop();
+      },
       child: Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(

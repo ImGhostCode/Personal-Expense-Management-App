@@ -98,7 +98,7 @@ Stack _head() {
               children: [
                 Positioned(
                   top: 30,
-                  left: 380,
+                  right: 30,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(7),
                     child: Container(
@@ -114,7 +114,7 @@ Stack _head() {
                   ),
                 ),
                 const Padding(
-                  padding: EdgeInsets.only(top: 35, left: 10),
+                  padding: EdgeInsets.only(top: 35, left: 30),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
