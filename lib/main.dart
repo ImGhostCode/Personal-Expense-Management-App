@@ -1,3 +1,5 @@
+import 'package:expanse_management/Screens/statistic.dart';
+import 'package:expanse_management/Widgets/bottom_navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:expanse_management/Screens/home.dart';
 
@@ -13,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Home(),
+      home: Bottom(),
     );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:expanse_management/data/listMoney.dart';
+import 'package:expanse_management/data/list_money.dart';
 import 'package:flutter/material.dart';
 import 'package:expanse_management/Constants/color.dart';
 
@@ -88,7 +88,7 @@ Stack _head() {
             width: double.infinity,
             height: 240,
             decoration: const BoxDecoration(
-              color: Colors.blueAccent,
+              color: Color(0xff368983),
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20),
@@ -97,7 +97,7 @@ Stack _head() {
             child: Stack(
               children: [
                 Positioned(
-                  top: 35,
+                  top: 30,
                   left: 380,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(7),
@@ -147,7 +147,7 @@ Stack _head() {
         left: 37,
         child: Container(
           height: 180,
-          width: 380,
+          width: 460,
           decoration: BoxDecoration(
             boxShadow: const [
               BoxShadow(
@@ -157,7 +157,7 @@ Stack _head() {
                 spreadRadius: 6,
               ),
             ],
-            color: Colors.blueAccent,
+            color: const Color(0xff368983),
             borderRadius: BorderRadius.circular(15),
           ),
           child: const Column(
@@ -209,7 +209,7 @@ Stack _head() {
                       children: [
                         CircleAvatar(
                           radius: 13,
-                          backgroundColor: Colors.blue,
+                          backgroundColor: Color.fromARGB(255, 85, 145, 141),
                           child: Icon(
                             Icons.arrow_downward,
                             color: Colors.white,
@@ -231,7 +231,7 @@ Stack _head() {
                       children: [
                         CircleAvatar(
                           radius: 13,
-                          backgroundColor: Colors.blue,
+                          backgroundColor: Color.fromARGB(255, 85, 145, 141),
                           child: Icon(
                             Icons.arrow_upward,
                             color: Colors.white,
