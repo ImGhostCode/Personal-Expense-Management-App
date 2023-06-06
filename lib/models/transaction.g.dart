@@ -32,7 +32,7 @@ class TransactionAdapter extends TypeAdapter<Transaction> {
       ..writeByte(0)
       ..write(obj.category)
       ..writeByte(1)
-      ..write(obj.explain)
+      ..write(obj.notes)
       ..writeByte(2)
       ..write(obj.amount)
       ..writeByte(3)

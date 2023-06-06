@@ -7,7 +7,7 @@ class Transaction extends HiveObject {
   String category;
 
   @HiveField(1)
-  String explain;
+  String notes;
 
   @HiveField(2)
   String amount;
@@ -18,6 +18,5 @@ class Transaction extends HiveObject {
   @HiveField(4)
   DateTime datetime;
 
-  Transaction(
-      this.type, this.amount, this.datetime, this.explain, this.category);
+  Transaction(this.type, this.amount, this.datetime, this.notes, this.category);
 }
