@@ -3,6 +3,8 @@ import 'package:expanse_management/models/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
+import '../Constants/categories.dart';
+
 class AddScreen extends StatefulWidget {
   const AddScreen({super.key});
 
@@ -15,12 +17,7 @@ class _AddScreenState extends State<AddScreen> {
   DateTime date = DateTime.now();
   String? selectedCategoryItem;
   String? selectedTypeItem;
-  final List<String> categoryItems = [
-    'Food',
-    'Transfer',
-    'Transportation',
-    'Education'
-  ];
+
   final List<String> types = ['Income', 'Expense'];
   final TextEditingController explainC = TextEditingController();
   FocusNode explainFocus = FocusNode();
@@ -61,7 +58,7 @@ class _AddScreenState extends State<AddScreen> {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20), color: Colors.white),
       height: 650,
-      width: 400,
+      width: 360,
       child: Column(children: [
         const SizedBox(
           height: 50,

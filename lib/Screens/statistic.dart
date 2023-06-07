@@ -30,17 +30,27 @@ class _StatisticsState extends State<Statistics> {
   void initState() {
     super.initState();
     box.listenable().addListener(updateNotifier);
+    box.listenable().addListener(fetchTransactions);
   }
 
   @override
   void dispose() {
     box.listenable().removeListener(updateNotifier);
+    box.listenable().removeListener(fetchTransactions);
+
     super.dispose();
   }
 
   void updateNotifier() {
     notifier.value =
         notifier.value + 1; // Update the value to trigger a rebuild
+  }
+
+  void fetchTransactions() {
+    listTransaction[0] = getTransactionToday();
+    listTransaction[1] = getTransactionWeek();
+    listTransaction[2] = getTransactionMonth();
+    listTransaction[3] = getTransactionYear();
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:expanse_management/Screens/add_transaction.dart';
+import 'package:expanse_management/Screens/category_screen.dart';
 import 'package:expanse_management/Screens/home.dart';
 import 'package:expanse_management/Screens/statistic.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class _BottomState extends State<Bottom> {
   List Screen = [
     const Home(),
     const Statistics(),
-    const Home(),
+    const CategoryScreen(),
     const Padding(
       padding: EdgeInsets.all(8.0),
       child: Statistics(),
@@ -75,7 +76,7 @@ class _BottomState extends State<Bottom> {
                   });
                 },
                 child: Icon(
-                  Icons.account_balance_wallet_outlined,
+                  Icons.category_outlined,
                   size: 30,
                   color:
                       indexColor == 2 ? const Color(0xff368983) : Colors.grey,
@@ -87,7 +88,7 @@ class _BottomState extends State<Bottom> {
                   });
                 },
                 child: Icon(
-                  Icons.person_2_outlined,
+                  Icons.search_outlined,
                   size: 30,
                   color:
                       indexColor == 3 ? const Color(0xff368983) : Colors.grey,

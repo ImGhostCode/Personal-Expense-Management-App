@@ -1,3 +1,4 @@
+import 'package:expanse_management/Constants/days.dart';
 import 'package:expanse_management/data/utilty.dart';
 import 'package:expanse_management/models/transaction.dart';
 import 'package:flutter/material.dart';
@@ -13,15 +14,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   var transactionHistory;
   final box = Hive.box<Transaction>('data');
-  final List<String> days = [
-    'Monday',
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    'Friday',
-    'Saturday',
-    'Sunday'
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,6 +67,28 @@ class _HomeState extends State<Home> {
   Widget listTransaction(Transaction transactionHistory, int index) {
     return Dismissible(
         key: UniqueKey(),
+        confirmDismiss: (direction) async {
+          return await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text("Confirm"),
+                content: const Text(
+                    "Are you sure you want to delete this transaction?"),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text("Cancel"),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: const Text("Delete"),
+                  ),
+                ],
+              );
+            },
+          );
+        },
         onDismissed: (direction) {
           transactionHistory.delete();
         },
@@ -182,7 +196,7 @@ Stack _head() {
         left: 37,
         child: Container(
           height: 180,
-          width: 380,
+          width: 330,
           decoration: BoxDecoration(
             boxShadow: const [
               BoxShadow(

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class Chart extends StatefulWidget {
-  final currIndex;
-  const Chart({super.key, required this.currIndex});
+  int currIndex;
+  Chart({super.key, required this.currIndex});
 
   @override
   State<Chart> createState() => _ChartState();
