@@ -1,6 +1,7 @@
 import 'package:expanse_management/Screens/add_transaction.dart';
 import 'package:expanse_management/Screens/category_screen.dart';
 import 'package:expanse_management/Screens/home.dart';
+import 'package:expanse_management/Screens/search_screen.dart';
 import 'package:expanse_management/Screens/statistic.dart';
 import 'package:flutter/material.dart';
 
@@ -16,12 +17,12 @@ class _BottomState extends State<Bottom> {
   // ignore: non_constant_identifier_names
   List Screen = [
     const Home(),
-    const Statistics(),
-    const CategoryScreen(),
     const Padding(
       padding: EdgeInsets.all(8.0),
       child: Statistics(),
-    )
+    ),
+    const CategoryScreen(),
+    const SearchScreen()
   ];
 
   @override

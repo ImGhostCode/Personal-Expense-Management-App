@@ -1,5 +1,5 @@
 import 'package:expanse_management/data/utilty.dart';
-import 'package:expanse_management/models/transaction.dart';
+import 'package:expanse_management/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -40,7 +40,7 @@ class _ChartState extends State<Chart> {
         break;
       default:
     }
-    return Container(
+    var container = SizedBox(
       width: double.infinity,
       height: 380,
       child: SfCartesianChart(
@@ -57,15 +57,15 @@ class _ChartState extends State<Chart> {
                       j
                           ? b
                               ? currListTransaction![index]
-                                  .datetime
+                                  .createAt
                                   .hour
                                   .toString()
                               : currListTransaction![index]
-                                  .datetime
+                                  .createAt
                                   .day
                                   .toString()
                           : currListTransaction![index]
-                              .datetime
+                              .createAt
                               .month
                               .toString(),
                       b
@@ -84,6 +84,7 @@ class _ChartState extends State<Chart> {
         ],
       ),
     );
+    return container;
   }
 }
 

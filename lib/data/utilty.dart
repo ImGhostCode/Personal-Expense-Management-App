@@ -1,9 +1,9 @@
-import 'package:expanse_management/models/transaction.dart';
+import 'package:expanse_management/models/transaction_model.dart';
 import 'package:hive/hive.dart';
 
 int totals = 0;
 
-final box = Hive.box<Transaction>('data');
+final box = Hive.box<Transaction>('transactions');
 
 int totalBalance() {
   var transactions = box.values.toList();
@@ -46,7 +46,7 @@ List<Transaction> getTransactionToday() {
   var transactions = box.values.toList();
   DateTime date = DateTime.now();
   for (var i = 0; i < transactions.length; i++) {
-    if (transactions[i].datetime.day == date.day) {
+    if (transactions[i].createAt.day == date.day) {
       result.add(transactions[i]);
     }
   }
@@ -59,8 +59,8 @@ List<Transaction> getTransactionWeek() {
   DateTime date = DateTime.now();
   var transactions = box.values.toList();
   for (var i = 0; i < transactions.length; i++) {
-    if (date.day - 7 <= transactions[i].datetime.day &&
-        transactions[i].datetime.day <= date.day) {
+    if (date.day - 7 <= transactions[i].createAt.day &&
+        transactions[i].createAt.day <= date.day) {
       result.add(transactions[i]);
     }
   }
@@ -73,7 +73,7 @@ List<Transaction> getTransactionMonth() {
   var transactions = box.values.toList();
   DateTime date = DateTime.now();
   for (var i = 0; i < transactions.length; i++) {
-    if (transactions[i].datetime.month == date.month) {
+    if (transactions[i].createAt.month == date.month) {
       result.add(transactions[i]);
     }
   }
@@ -86,7 +86,7 @@ List<Transaction> getTransactionYear() {
   var transactions = box.values.toList();
   DateTime date = DateTime.now();
   for (var i = 0; i < transactions.length; i++) {
-    if (transactions[i].datetime.year == date.year) {
+    if (transactions[i].createAt.year == date.year) {
       result.add(transactions[i]);
     }
   }
@@ -112,12 +112,12 @@ List time(List<Transaction> transactions, bool hour) {
   for (var c = 0; c < transactions.length; c++) {
     for (var i = c; i < transactions.length; i++) {
       if (hour) {
-        if (transactions[i].datetime.hour == transactions[c].datetime.hour) {
+        if (transactions[i].createAt.hour == transactions[c].createAt.hour) {
           a.add(transactions[i]);
           counter = i;
         }
       } else {
-        if (transactions[i].datetime.day == transactions[c].datetime.day) {
+        if (transactions[i].createAt.day == transactions[c].createAt.day) {
           a.add(transactions[i]);
           counter = i;
         }

@@ -1,12 +1,12 @@
 import 'package:expanse_management/Widgets/bottom_navbar.dart';
-import 'package:expanse_management/models/transaction.dart';
+import 'package:expanse_management/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
 void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(TransactionAdapter());
-  await Hive.openBox<Transaction>('data');
+  await Hive.openBox<Transaction>('transactions');
   runApp(const MyApp());
 }
 

@@ -1,6 +1,6 @@
 import 'package:expanse_management/Constants/days.dart';
 import 'package:expanse_management/data/utilty.dart';
-import 'package:expanse_management/models/transaction.dart';
+import 'package:expanse_management/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -13,7 +13,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   var transactionHistory;
-  final box = Hive.box<Transaction>('data');
+  final box = Hive.box<Transaction>('transactions');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,7 +110,7 @@ class _HomeState extends State<Home> {
         ),
       ),
       subtitle: Text(
-        '${days[transactionHistory.datetime.weekday - 1]}  ${transactionHistory.datetime.day}/${transactionHistory.datetime.month}/${transactionHistory.datetime.year}',
+        '${days[transactionHistory.createAt.weekday - 1]}  ${transactionHistory.createAt.day}/${transactionHistory.createAt.month}/${transactionHistory.createAt.year}',
         style: const TextStyle(
           fontWeight: FontWeight.w600,
         ),

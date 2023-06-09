@@ -1,5 +1,5 @@
 import 'package:expanse_management/Constants/color.dart';
-import 'package:expanse_management/models/transaction.dart';
+import 'package:expanse_management/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
@@ -13,7 +13,7 @@ class AddScreen extends StatefulWidget {
 }
 
 class _AddScreenState extends State<AddScreen> {
-  final box = Hive.box<Transaction>('data');
+  final box = Hive.box<Transaction>('transactions');
   DateTime date = DateTime.now();
   String? selectedCategoryItem;
   String? selectedTypeItem;

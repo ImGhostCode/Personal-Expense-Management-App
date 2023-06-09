@@ -1,6 +1,6 @@
 import 'package:expanse_management/Widgets/chart.dart';
 import 'package:expanse_management/data/utilty.dart';
-import 'package:expanse_management/models/transaction.dart';
+import 'package:expanse_management/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -14,7 +14,7 @@ class Statistics extends StatefulWidget {
 ValueNotifier notifier = ValueNotifier(0);
 
 class _StatisticsState extends State<Statistics> {
-  final box = Hive.box<Transaction>('data');
+  final box = Hive.box<Transaction>('transactions');
 
   List day = ['Day', 'Week', 'Month', 'Year'];
   List listTransaction = [
@@ -29,14 +29,16 @@ class _StatisticsState extends State<Statistics> {
   @override
   void initState() {
     super.initState();
+
     box.listenable().addListener(updateNotifier);
-    box.listenable().addListener(fetchTransactions);
+    // box.listenable().addListener(fetchTransactions);
+    fetchTransactions();
   }
 
   @override
   void dispose() {
     box.listenable().removeListener(updateNotifier);
-    box.listenable().removeListener(fetchTransactions);
+    // box.listenable().removeListener(fetchTransactions);
 
     super.dispose();
   }
@@ -44,6 +46,7 @@ class _StatisticsState extends State<Statistics> {
   void updateNotifier() {
     notifier.value =
         notifier.value + 1; // Update the value to trigger a rebuild
+    fetchTransactions();
   }
 
   void fetchTransactions() {
@@ -204,7 +207,7 @@ class _StatisticsState extends State<Statistics> {
                 ),
               ),
               subtitle: Text(
-                '${currListTransaction[index].datetime.day}/${currListTransaction[index].datetime.month}/${currListTransaction[index].datetime.year}',
+                '${currListTransaction[index].createAt.day}/${currListTransaction[index].createAt.month}/${currListTransaction[index].createAt.year}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w600,
                 ),

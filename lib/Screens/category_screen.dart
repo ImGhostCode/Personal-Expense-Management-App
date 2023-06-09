@@ -1,8 +1,9 @@
+import 'package:expanse_management/Constants/color.dart';
 import 'package:expanse_management/Constants/days.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import '../Constants/categories.dart';
-import '../models/transaction.dart';
+import '../models/transaction_model.dart';
 
 class CategoryScreen extends StatelessWidget {
   const CategoryScreen({Key? key});
@@ -11,6 +12,7 @@ class CategoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: primaryColor,
         title: const Text('Categories'),
       ),
       body: ListView.builder(
@@ -56,7 +58,7 @@ class _CategoryDetailsScreenState extends State<CategoryDetailsScreen> {
   }
 
   void filterTransactions() {
-    final box = Hive.box<Transaction>('data');
+    final box = Hive.box<Transaction>('transactions');
     filteredTransactions = box.values
         .where((transaction) => transaction.category == widget.category)
         .toList();
@@ -67,6 +69,7 @@ class _CategoryDetailsScreenState extends State<CategoryDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.category),
+        backgroundColor: primaryColor,
       ),
       body: ListView.builder(
         itemCount: filteredTransactions.length,
@@ -86,7 +89,7 @@ class _CategoryDetailsScreenState extends State<CategoryDetailsScreen> {
               ),
             ),
             subtitle: Text(
-              '${days[transaction.datetime.weekday - 1]}  ${transaction.datetime.day}/${transaction.datetime.month}/${transaction.datetime.year}',
+              '${days[transaction.createAt.weekday - 1]}  ${transaction.createAt.day}/${transaction.createAt.month}/${transaction.createAt.year}',
               style: const TextStyle(
                 fontWeight: FontWeight.w600,
               ),

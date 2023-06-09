@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'transaction.dart';
+part of 'transaction_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
@@ -38,7 +38,7 @@ class TransactionAdapter extends TypeAdapter<Transaction> {
       ..writeByte(3)
       ..write(obj.type)
       ..writeByte(4)
-      ..write(obj.datetime);
+      ..write(obj.createAt);
   }
 
   @override
