@@ -99,7 +99,8 @@ class _HomeState extends State<Home> {
     return ListTile(
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(5),
-        child: Image.asset('images/${transactionHistory.category}.png',
+        child: Image.asset(
+            'images/${transactionHistory.category.categoryImage}',
             height: 40),
       ),
       title: Text(

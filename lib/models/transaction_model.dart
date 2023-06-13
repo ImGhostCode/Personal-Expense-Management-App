@@ -1,12 +1,12 @@
 import 'package:hive/hive.dart';
 
 import 'category_model.dart';
-part 'transaction.g.dart';
+part 'transaction_model.g.dart';
 
 @HiveType(typeId: 1)
 class Transaction extends HiveObject {
   @HiveField(0)
-  String category;
+  CategoryModel category;
 
   @HiveField(1)
   String notes;
@@ -19,6 +19,20 @@ class Transaction extends HiveObject {
 
   @HiveField(4)
   DateTime createAt;
+
+  // static void setupCategoryTable() {
+  //   var box = Hive.box<Category>('categories');
+  //   if (!box.containsKey('default')) {
+  //     List<Category> defaultCategory = [
+  //       Category('Food', 'Food.png', 'Expense'),
+  //       Category('Transfer', 'Transfer.png', 'Expense'),
+  //       Category('Transportation', 'Transportation.png', 'Expense'),
+  //       Category('Education', 'Education.png', 'Expense'),
+  //       Category('Salary', 'Salary.png', 'Income'),
+  //     ];
+  //     box.addAll(defaultCategory);
+  //   }
+  // }
 
   Transaction(this.type, this.amount, this.createAt, this.notes, this.category);
 }

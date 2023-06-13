@@ -1,9 +1,11 @@
 import 'package:expanse_management/Constants/color.dart';
+import 'package:expanse_management/Constants/default_categories.dart';
+import 'package:expanse_management/models/category_model.dart';
 import 'package:expanse_management/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
-import '../Constants/categories.dart';
+// import '../Constants/categories.dart';
 
 class AddScreen extends StatefulWidget {
   const AddScreen({super.key});
@@ -13,10 +15,16 @@ class AddScreen extends StatefulWidget {
 }
 
 class _AddScreenState extends State<AddScreen> {
-  final box = Hive.box<Transaction>('transactions');
+  List<CategoryModel> incomeCategories = defaultIncomeCategories;
+  List<CategoryModel> expenseCategories = defaultExpenseCategories;
+
+  final boxTransaction = Hive.box<Transaction>('transactions');
   DateTime date = DateTime.now();
-  String? selectedCategoryItem;
+  CategoryModel? selectedCategoryItem;
   String? selectedTypeItem;
+
+  late Box<CategoryModel> box;
+  List<CategoryModel> categories = [];
 
   final List<String> types = ['Income', 'Expense'];
   final TextEditingController explainC = TextEditingController();
@@ -32,6 +40,28 @@ class _AddScreenState extends State<AddScreen> {
     });
     amountFocus.addListener(() {
       setState(() {});
+    });
+
+    openBox().then((_) {
+      fetchCategories();
+    });
+  }
+
+  Future<void> openBox() async {
+    box = await Hive.openBox<CategoryModel>('categories');
+  }
+
+  Future<void> fetchCategories() async {
+    categories = box.values.toList();
+    setState(() {
+      incomeCategories = [
+        ...defaultIncomeCategories,
+        ...box.values.where((category) => category.type == 'Income').toList(),
+      ];
+      expenseCategories = [
+        ...defaultExpenseCategories,
+        ...box.values.where((category) => category.type == 'Expense').toList(),
+      ];
     });
   }
 
@@ -63,7 +93,7 @@ class _AddScreenState extends State<AddScreen> {
         const SizedBox(
           height: 50,
         ),
-        categoryField(),
+        typeField(),
         const SizedBox(
           height: 50,
         ),
@@ -75,7 +105,7 @@ class _AddScreenState extends State<AddScreen> {
         const SizedBox(
           height: 50,
         ),
-        typeField(),
+        categoryField(),
         const SizedBox(
           height: 50,
         ),
@@ -116,7 +146,7 @@ class _AddScreenState extends State<AddScreen> {
         }
         var newTransaction = Transaction(selectedTypeItem!, amountC.text, date,
             explainC.text, selectedCategoryItem!);
-        box.add(newTransaction);
+        boxTransaction.add(newTransaction);
         Navigator.of(context).pop();
       },
       child: Container(
@@ -241,7 +271,7 @@ class _AddScreenState extends State<AddScreen> {
                     ))
                 .toList(),
             hint: const Text(
-              'Type',
+              'Select Type',
               style: TextStyle(color: Colors.grey),
             ),
             dropdownColor: Colors.white,
@@ -250,6 +280,7 @@ class _AddScreenState extends State<AddScreen> {
             onChanged: ((value) {
               setState(() {
                 selectedTypeItem = value!;
+                selectedCategoryItem = null;
               });
             }),
           )),
@@ -278,67 +309,144 @@ class _AddScreenState extends State<AddScreen> {
     );
   }
 
+  // Padding categoryField() {
+  //   final List<CategoryModel> currCategories =
+  //       selectedTypeItem == 'Income' ? incomeCategories : expenseCategories;
+
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(
+  //       horizontal: 15,
+  //     ),
+  //     child: Container(
+  //         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+  //         width: double.infinity,
+  //         decoration: BoxDecoration(
+  //             borderRadius: BorderRadius.circular(10),
+  //             border: Border.all(
+  //               width: 2,
+  //               color: const Color(0xff368983),
+  //             )),
+  //         child: DropdownButton<>(
+  //           value: selectedCategoryItem?.title,
+  //           items: currCategories
+  //               .map((e) => DropdownMenuItem(
+  //                     value: e.title,
+  //                     child: Row(children: [
+  //                       SizedBox(
+  //                         width: 40,
+  //                         child: Image.asset('images/${e.categoryImage}'),
+  //                       ),
+  //                       const SizedBox(
+  //                         width: 10,
+  //                       ),
+  //                       Text(
+  //                         e.title,
+  //                         style: const TextStyle(fontSize: 15),
+  //                       )
+  //                     ]),
+  //                   ))
+  //               .toList(),
+  //           selectedItemBuilder: (BuildContext context) => currCategories
+  //               .map((e) => Row(
+  //                     children: [
+  //                       Container(
+  //                         width: 42,
+  //                         child: Image.asset('images/${e.categoryImage}'),
+  //                       ),
+  //                       const SizedBox(
+  //                         width: 5,
+  //                       ),
+  //                       Text(e.title)
+  //                     ],
+  //                   ))
+  //               .toList(),
+  //           hint: const Text(
+  //             'Name',
+  //             style: TextStyle(color: Colors.grey),
+  //           ),
+  //           dropdownColor: Colors.white,
+  //           isExpanded: true,
+  //           underline: Container(),
+  //           onChanged: ((value) {
+  //             setState(() {
+  //               setState(() {
+  //                 selectedCategoryItem = currCategories.firstWhere(
+  //                   (category) => category.title == value,
+  //                 );
+  //               });
+  //             });
+  //           }),
+  //         )),
+  //   );
+  // }
   Padding categoryField() {
+    final List<CategoryModel> currCategories =
+        selectedTypeItem == 'Income' ? incomeCategories : expenseCategories;
+
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 15,
       ),
       child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-          width: double.infinity,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                width: 2,
-                color: const Color(0xff368983),
-              )),
-          child: DropdownButton<String>(
-            value: selectedCategoryItem,
-            items: categoryItems
-                .map((e) => DropdownMenuItem(
-                      value: e,
-                      child: Row(children: [
-                        SizedBox(
-                          width: 40,
-                          child: Image.asset('images/$e.png'),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          e,
-                          style: const TextStyle(fontSize: 15),
-                        )
-                      ]),
-                    ))
-                .toList(),
-            selectedItemBuilder: (BuildContext context) => categoryItems
-                .map((e) => Row(
-                      children: [
-                        Container(
-                          width: 42,
-                          child: Image.asset('images/$e.png'),
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Text(e)
-                      ],
-                    ))
-                .toList(),
-            hint: const Text(
-              'Name',
-              style: TextStyle(color: Colors.grey),
-            ),
-            dropdownColor: Colors.white,
-            isExpanded: true,
-            underline: Container(),
-            onChanged: ((value) {
-              setState(() {
-                selectedCategoryItem = value!;
-              });
-            }),
-          )),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            width: 2,
+            color: const Color(0xff368983),
+          ),
+        ),
+        child: DropdownButton<CategoryModel>(
+          value: selectedCategoryItem,
+          items: currCategories
+              .map(
+                (e) => DropdownMenuItem<CategoryModel>(
+                  value: e,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 40,
+                        child: Image.asset('images/${e.categoryImage}'),
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        e.title,
+                        style: const TextStyle(fontSize: 15),
+                      )
+                    ],
+                  ),
+                ),
+              )
+              .toList(),
+          selectedItemBuilder: (BuildContext context) => currCategories
+              .map(
+                (e) => Row(
+                  children: [
+                    Container(
+                      width: 42,
+                      child: Image.asset('images/${e.categoryImage}'),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(e.title),
+                  ],
+                ),
+              )
+              .toList(),
+          hint: const Text(
+            'Name',
+            style: TextStyle(color: Colors.grey),
+          ),
+          dropdownColor: Colors.white,
+          isExpanded: true,
+          underline: Container(),
+          onChanged: (value) {
+            setState(() {
+              selectedCategoryItem = value;
+            });
+          },
+        ),
+      ),
     );
   }
 

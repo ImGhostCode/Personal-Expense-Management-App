@@ -1,12 +1,26 @@
 import 'package:expanse_management/Widgets/bottom_navbar.dart';
+import 'package:expanse_management/models/category_model.dart';
 import 'package:expanse_management/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
+
+// Future<void> clearData() async {
+//   final appDocumentDirectory =
+//       await path_provider.getApplicationDocumentsDirectory();
+//   Hive.init(appDocumentDirectory.path);
+//   await Hive.deleteFromDisk();
+// }
 
 void main() async {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await clearData();
   await Hive.initFlutter();
   Hive.registerAdapter(TransactionAdapter());
+  Hive.registerAdapter(CategoryModelAdapter());
   await Hive.openBox<Transaction>('transactions');
+  await Hive.openBox<CategoryModel>('categories');
+
   runApp(const MyApp());
 }
 
