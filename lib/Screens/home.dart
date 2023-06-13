@@ -155,10 +155,10 @@ Stack _head() {
                       height: 40,
                       width: 40,
                       color: Colors.transparent,
-                      child: const Icon(
-                        Icons.logout_outlined,
-                        size: 30,
-                        color: Colors.white,
+                      child: const CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.white,
+                        backgroundImage: AssetImage('images/avatar.png'),
                       ),
                     ),
                   ),

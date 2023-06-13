@@ -1,5 +1,7 @@
 import 'package:expanse_management/Constants/color.dart';
 import 'package:expanse_management/Constants/default_categories.dart';
+import 'package:expanse_management/Constants/limits.dart';
+import 'package:expanse_management/data/utilty.dart';
 import 'package:expanse_management/models/category_model.dart';
 import 'package:expanse_management/models/transaction_model.dart';
 import 'package:flutter/material.dart';
@@ -120,6 +122,7 @@ class _AddScreenState extends State<AddScreen> {
   }
 
   GestureDetector addTransaction() {
+    bool isWarningShown = false;
     return GestureDetector(
       onTap: () {
         if (selectedCategoryItem == null ||
@@ -144,10 +147,53 @@ class _AddScreenState extends State<AddScreen> {
           );
           return;
         }
+
+        double amount = double.tryParse(amountC.text) ?? 0.0;
+        if (selectedTypeItem == 'Expense' &&
+            amount > limitPerExpense &&
+            !isWarningShown) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Warning'),
+              content: const Text('The amount exceeds the spending limit.'),
+              actions: [
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          );
+          isWarningShown =
+              true; // Set the flag to true after showing the warning
+          return;
+        }
         var newTransaction = Transaction(selectedTypeItem!, amountC.text, date,
             explainC.text, selectedCategoryItem!);
         boxTransaction.add(newTransaction);
         Navigator.of(context).pop();
+
+        if (selectedTypeItem == 'Expense' && totalBalance() < limitTotal) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Warning'),
+              content: const Text('Total balance is less than the norm!'),
+              actions: [
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          );
+          return;
+        }
       },
       child: Container(
         alignment: Alignment.center,
