@@ -3,6 +3,7 @@ import 'package:expanse_management/Screens/category_screen.dart';
 import 'package:expanse_management/Screens/home.dart';
 import 'package:expanse_management/Screens/search_screen.dart';
 import 'package:expanse_management/Screens/statistic.dart';
+import 'package:expanse_management/Widgets/bar_chart.dart';
 import 'package:flutter/material.dart';
 
 class Bottom extends StatefulWidget {
@@ -20,6 +21,7 @@ class _BottomState extends State<Bottom> {
     const Padding(
       padding: EdgeInsets.all(8.0),
       child: Statistics(),
+      // child: TestStatisticScreen(),
     ),
     const CategoryScreen(),
     const SearchScreen()

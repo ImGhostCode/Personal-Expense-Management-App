@@ -1,6 +1,9 @@
 import 'package:expanse_management/Widgets/chart.dart';
+import 'package:expanse_management/Widgets/pie_chart.dart';
+import 'package:expanse_management/Widgets/bar_chart.dart';
 import 'package:expanse_management/data/utilty.dart';
 import 'package:expanse_management/models/transaction_model.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -70,6 +73,53 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
+  Widget makeTransactionsIcon() {
+    const width = 4.5;
+    const space = 3.5;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Container(
+          width: width,
+          height: 10,
+          color: const Color(0xff368983).withOpacity(0.4),
+        ),
+        const SizedBox(
+          width: space,
+        ),
+        Container(
+          width: width,
+          height: 28,
+          color: const Color(0xff368983).withOpacity(0.8),
+        ),
+        const SizedBox(
+          width: space,
+        ),
+        Container(
+          width: width,
+          height: 42,
+          color: const Color(0xff368983).withOpacity(1),
+        ),
+        const SizedBox(
+          width: space,
+        ),
+        Container(
+          width: width,
+          height: 28,
+          color: const Color(0xff368983).withOpacity(0.8),
+        ),
+        const SizedBox(
+          width: space,
+        ),
+        Container(
+          width: width,
+          height: 10,
+          color: const Color(0xff368983).withOpacity(0.4),
+        ),
+      ],
+    );
+  }
+
   CustomScrollView customScrollView() {
     return CustomScrollView(
       slivers: [
@@ -86,6 +136,7 @@ class _StatisticsState extends State<Statistics> {
                 fontWeight: FontWeight.w700,
               ),
             ),
+
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -162,9 +213,14 @@ class _StatisticsState extends State<Statistics> {
             const SizedBox(
               height: 20,
             ),
-            Chart(
-              currIndex: indexColor,
-            ),
+            // Chart(
+            //   currIndex: indexColor,
+            // ),
+            indexColor != 0
+                ? BarChartDetail(
+                    currIndex: indexColor,
+                  )
+                : const PieChartSample2(),
             const SizedBox(
               height: 20,
             ),

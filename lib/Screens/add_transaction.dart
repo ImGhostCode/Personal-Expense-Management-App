@@ -469,7 +469,7 @@ class _AddScreenState extends State<AddScreen> {
               .map(
                 (e) => Row(
                   children: [
-                    Container(
+                    SizedBox(
                       width: 42,
                       child: Image.asset('images/${e.categoryImage}'),
                     ),
@@ -480,7 +480,7 @@ class _AddScreenState extends State<AddScreen> {
               )
               .toList(),
           hint: const Text(
-            'Name',
+            'Select category',
             style: TextStyle(color: Colors.grey),
           ),
           dropdownColor: Colors.white,

@@ -3,7 +3,6 @@ import 'package:expanse_management/models/category_model.dart';
 import 'package:expanse_management/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
 
 // Future<void> clearData() async {
 //   final appDocumentDirectory =
