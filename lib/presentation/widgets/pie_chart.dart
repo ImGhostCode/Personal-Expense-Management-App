@@ -1,14 +1,12 @@
 // import 'package:fl_chart_app/presentation/resources/app_resources.dart';
-import 'dart:convert';
-
 import 'package:expanse_management/data/utilty.dart';
-import 'package:expanse_management/models/transaction_model.dart';
+import 'package:expanse_management/domain/models/transaction_model.dart';
 import 'package:fl_chart/fl_chart.dart';
-// import 'package:fl_chart_app/presentation/widgets/indicator.dart';
+
 import 'package:flutter/material.dart';
 
-class PieChartSample2 extends StatefulWidget {
-  const PieChartSample2({super.key});
+class PieChartDay extends StatefulWidget {
+  const PieChartDay({super.key});
 
   @override
   State<StatefulWidget> createState() => PieChart2State();
@@ -22,104 +20,125 @@ class PieChart2State extends State {
   @override
   void initState() {
     super.initState();
+    // box.listenable().addListener(updateExpenseTransactions);
+    updateExpenseTransactions();
+  }
+
+  // @override
+  // void dispose() {
+  //   // box.listenable().removeListener(updateExpenseTransactions);
+  //   // box.listenable().removeListener(fetchTransactions);
+
+  //   super.dispose();
+  // }
+
+  void updateExpenseTransactions() {
     expenseTransactionsPerDay = getExpenseTransactionToday();
+
+    categoryAmountMap.clear();
 
     for (var i = 0; i < expenseTransactionsPerDay.length; i++) {
       if (categoryAmountMap
           .containsKey(expenseTransactionsPerDay[i].category.title)) {
         categoryAmountMap[expenseTransactionsPerDay[i].category.title] =
-            (categoryAmountMap[expenseTransactionsPerDay[i].category.title]! +
-                double.parse(expenseTransactionsPerDay[i].amount));
+            categoryAmountMap[expenseTransactionsPerDay[i].category.title]! +
+                double.parse(expenseTransactionsPerDay[i].amount);
       } else {
         categoryAmountMap[expenseTransactionsPerDay[i].category.title] =
             double.parse(expenseTransactionsPerDay[i].amount);
       }
     }
+
     total = totalChart(expenseTransactionsPerDay);
+
+    // setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1.3,
-      child: Row(
-        children: <Widget>[
-          const SizedBox(
-            height: 18,
-          ),
-          Expanded(
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: PieChart(
-                PieChartData(
-                  pieTouchData: PieTouchData(
-                    touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                      setState(() {
-                        if (!event.isInterestedForInteractions ||
-                            pieTouchResponse == null ||
-                            pieTouchResponse.touchedSection == null) {
-                          touchedIndex = -1;
-                          return;
-                        }
-                        touchedIndex = pieTouchResponse
-                            .touchedSection!.touchedSectionIndex;
-                      });
-                    },
-                  ),
-                  borderData: FlBorderData(
-                    show: false,
-                  ),
-                  sectionsSpace: 0,
-                  centerSpaceRadius: 40,
-                  sections: showingSections(),
+    return categoryAmountMap.isEmpty
+        ? const Text('No expenses')
+        : AspectRatio(
+            aspectRatio: 1.3,
+            child: Row(
+              children: <Widget>[
+                const SizedBox(
+                  height: 18,
                 ),
-              ),
+                Expanded(
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: PieChart(
+                      PieChartData(
+                        pieTouchData: PieTouchData(
+                          touchCallback:
+                              (FlTouchEvent event, pieTouchResponse) {
+                            setState(() {
+                              if (!event.isInterestedForInteractions ||
+                                  pieTouchResponse == null ||
+                                  pieTouchResponse.touchedSection == null) {
+                                touchedIndex = -1;
+                                return;
+                              }
+                              touchedIndex = pieTouchResponse
+                                  .touchedSection!.touchedSectionIndex;
+                            });
+                          },
+                        ),
+                        borderData: FlBorderData(
+                          show: false,
+                        ),
+                        sectionsSpace: 0,
+                        centerSpaceRadius: 40,
+                        sections: showingSections(),
+                      ),
+                    ),
+                  ),
+                ),
+                const Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Indicator(
+                      color: AppColors.contentColorBlue,
+                      text: 'Food',
+                      isSquare: true,
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Indicator(
+                      color: AppColors.contentColorYellow,
+                      text: 'Transfer',
+                      isSquare: true,
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Indicator(
+                      color: AppColors.contentColorPurple,
+                      text: 'Transportation',
+                      isSquare: true,
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Indicator(
+                      color: AppColors.contentColorGreen,
+                      text: 'Education',
+                      isSquare: true,
+                    ),
+                    SizedBox(
+                      height: 18,
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  width: 28,
+                ),
+              ],
             ),
-          ),
-          const Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Indicator(
-                color: AppColors.contentColorBlue,
-                text: 'Food',
-                isSquare: true,
-              ),
-              SizedBox(
-                height: 4,
-              ),
-              Indicator(
-                color: AppColors.contentColorYellow,
-                text: 'Transfer',
-                isSquare: true,
-              ),
-              SizedBox(
-                height: 4,
-              ),
-              Indicator(
-                color: AppColors.contentColorPurple,
-                text: 'Transportation',
-                isSquare: true,
-              ),
-              SizedBox(
-                height: 4,
-              ),
-              Indicator(
-                color: AppColors.contentColorGreen,
-                text: 'Education',
-                isSquare: true,
-              ),
-              SizedBox(
-                height: 18,
-              ),
-            ],
-          ),
-          const SizedBox(
-            width: 28,
-          ),
-        ],
-      ),
-    );
+          );
   }
 
   // List<PieChartSectionData> showingSections() {

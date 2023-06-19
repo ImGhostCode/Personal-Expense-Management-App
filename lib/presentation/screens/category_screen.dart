@@ -122,8 +122,8 @@ import 'package:expanse_management/Constants/color.dart';
 import 'package:expanse_management/Constants/default_categories.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:expanse_management/models/category_model.dart';
-import 'package:expanse_management/models/transaction_model.dart';
+import 'package:expanse_management/domain/models/category_model.dart';
+import 'package:expanse_management/domain/models/transaction_model.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({Key? key}) : super(key: key);

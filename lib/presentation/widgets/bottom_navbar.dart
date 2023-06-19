@@ -1,9 +1,8 @@
-import 'package:expanse_management/Screens/add_transaction.dart';
-import 'package:expanse_management/Screens/category_screen.dart';
-import 'package:expanse_management/Screens/home.dart';
-import 'package:expanse_management/Screens/search_screen.dart';
-import 'package:expanse_management/Screens/statistic.dart';
-import 'package:expanse_management/Widgets/bar_chart.dart';
+import 'package:expanse_management/presentation/screens/add_transaction.dart';
+import 'package:expanse_management/presentation/screens/category_screen.dart';
+import 'package:expanse_management/presentation/screens/home.dart';
+import 'package:expanse_management/presentation/screens/search_screen.dart';
+import 'package:expanse_management/presentation/screens/statistic.dart';
 import 'package:flutter/material.dart';
 
 class Bottom extends StatefulWidget {

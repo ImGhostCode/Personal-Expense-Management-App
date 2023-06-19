@@ -1,8 +1,10 @@
 import 'package:expanse_management/Constants/days.dart';
 import 'package:expanse_management/data/utilty.dart';
-import 'package:expanse_management/models/transaction_model.dart';
+import 'package:expanse_management/domain/models/category_model.dart';
+import 'package:expanse_management/domain/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:expanse_management/data/utilty.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -117,7 +119,7 @@ class _HomeState extends State<Home> {
         ),
       ),
       trailing: Text(
-        '\$${transactionHistory.amount}',
+        '${transactionHistory.amount}vnđ',
         style: TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 19,
@@ -147,22 +149,15 @@ Stack _head() {
             child: Stack(
               children: [
                 Positioned(
-                  top: 30,
-                  right: 30,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(7),
-                    child: Container(
-                      height: 40,
-                      width: 40,
-                      color: Colors.transparent,
-                      child: const CircleAvatar(
-                        radius: 20,
-                        backgroundColor: Colors.white,
-                        backgroundImage: AssetImage('images/avatar.png'),
+                    top: 30,
+                    right: 30,
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.settings,
+                        color: Colors.white,
                       ),
-                    ),
-                  ),
-                ),
+                    )),
                 const Padding(
                   padding: EdgeInsets.only(top: 35, left: 30),
                   child: Column(
@@ -239,7 +234,7 @@ Stack _head() {
                 child: Row(
                   children: [
                     Text(
-                      '\$ ${totalBalance()}',
+                      formatCurrency(totalBalance()),
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 25,
@@ -259,10 +254,10 @@ Stack _head() {
                       children: [
                         CircleAvatar(
                           radius: 13,
-                          backgroundColor: Color.fromARGB(255, 85, 145, 141),
+                          backgroundColor: Colors.green,
                           child: Icon(
-                            Icons.arrow_downward,
-                            color: Colors.white,
+                            Icons.arrow_upward,
+                            color: Colors.black,
                             size: 19,
                           ),
                         ),
@@ -281,10 +276,10 @@ Stack _head() {
                       children: [
                         CircleAvatar(
                           radius: 13,
-                          backgroundColor: Color.fromARGB(255, 85, 145, 141),
+                          backgroundColor: Colors.red,
                           child: Icon(
-                            Icons.arrow_upward,
-                            color: Colors.white,
+                            Icons.arrow_downward,
+                            color: Colors.black,
                             size: 19,
                           ),
                         ),
@@ -309,7 +304,7 @@ Stack _head() {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '\$ ${totalIncome()}',
+                      formatCurrency(totalIncome()),
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 17,
@@ -317,7 +312,7 @@ Stack _head() {
                       ),
                     ),
                     Text(
-                      '\$ ${totalExpense()}',
+                      formatCurrency(totalIncome()),
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 17,

@@ -1,5 +1,5 @@
 import 'package:expanse_management/data/utilty.dart';
-import 'package:expanse_management/models/transaction_model.dart';
+import 'package:expanse_management/domain/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -13,30 +13,36 @@ class Chart extends StatefulWidget {
 
 class _ChartState extends State<Chart> {
   List<Transaction>? currListTransaction;
-  bool b = true;
-  bool j = true;
+  bool hour = true;
+  bool day = true;
+  bool month = true;
   @override
   Widget build(BuildContext context) {
     switch (widget.currIndex) {
       case 0:
         currListTransaction = getTransactionToday();
-        b = true;
-        j = true;
+        hour = true;
+        day = true;
+        month = false;
         break;
       case 1:
         currListTransaction = getTransactionWeek();
-        b = false;
-        j = true;
+        hour = false;
+        day = true;
+        month = false;
         break;
       case 2:
         currListTransaction = getTransactionMonth();
-        b = false;
-        j = true;
+        hour = false;
+        day = true;
+        month = false;
+
         break;
       case 3:
         currListTransaction = getTransactionYear();
-
-        j = false;
+        hour = false;
+        day = false;
+        month = true;
         break;
       default:
     }
@@ -51,11 +57,11 @@ class _ChartState extends State<Chart> {
               width: 3,
               dataSource: <SalesData>[
                 ...List.generate(
-                    time(currListTransaction!, b ? true : false).length,
+                    time(currListTransaction!, hour, day, month).length,
                     (index) {
                   return SalesData(
-                      j
-                          ? b
+                      day
+                          ? hour
                               ? currListTransaction![index]
                                   .createAt
                                   .hour
@@ -68,15 +74,26 @@ class _ChartState extends State<Chart> {
                               .createAt
                               .month
                               .toString(),
-                      b
+                      day
                           ? index > 0
-                              ? time(currListTransaction!, true)[index] +
-                                  time(currListTransaction!, true)[index - 1]
-                              : time(currListTransaction!, true)[index]
-                          : index > 0
-                              ? time(currListTransaction!, false)[index] +
-                                  time(currListTransaction!, false)[index - 1]
-                              : time(currListTransaction!, false)[index]);
+                              ? time(currListTransaction!, false, true, false)[index] +
+                                  time(currListTransaction!, false, true,
+                                      false)[index - 1]
+                              : time(currListTransaction!, false, true, false)[
+                                  index]
+                          : month
+                              ? index > 0
+                                  ? time(currListTransaction!, false, false, true)[index] +
+                                      time(currListTransaction!, false, false,
+                                          true)[index - 1]
+                                  : time(currListTransaction!, false, false,
+                                      true)[index]
+                              : index > 0
+                                  ? time(currListTransaction!, false, false, false)[index] +
+                                      time(currListTransaction!, false, false,
+                                          false)[index - 1]
+                                  : time(currListTransaction!, false, false,
+                                      false)[index]);
                 })
               ],
               xValueMapper: (SalesData sales, _) => sales.year,
