@@ -1,2 +1,2 @@
-int limitPerExpense = 1000;
-int limitTotal = 500;
+int limitPerExpense = 1000000;
+int limitTotal = 500000;

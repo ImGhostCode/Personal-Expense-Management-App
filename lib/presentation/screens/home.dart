@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:expanse_management/Constants/days.dart';
 import 'package:expanse_management/data/utilty.dart';
 import 'package:expanse_management/domain/models/category_model.dart';
@@ -119,7 +121,7 @@ class _HomeState extends State<Home> {
         ),
       ),
       trailing: Text(
-        '${transactionHistory.amount}vnđ',
+        formatCurrency(int.parse(transactionHistory.amount)),
         style: TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 19,
@@ -312,7 +314,7 @@ Stack _head() {
                       ),
                     ),
                     Text(
-                      formatCurrency(totalIncome()),
+                      formatCurrency(totalExpense()),
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 17,

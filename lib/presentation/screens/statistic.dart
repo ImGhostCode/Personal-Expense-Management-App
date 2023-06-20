@@ -1,11 +1,11 @@
-// import 'package:expanse_management/Widgets/chart.dart';
-// import 'package:expanse_management/Widgets/pie_chart.dart';
 import 'package:expanse_management/presentation/widgets/spline_chart.dart';
 import 'package:expanse_management/data/utilty.dart';
-import 'package:expanse_management/domain/models/category_model.dart';
 import 'package:expanse_management/domain/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/intl.dart';
 
 class Statistics extends StatefulWidget {
   const Statistics({super.key});
@@ -29,6 +29,8 @@ class _StatisticsState extends State<Statistics> {
   List<Transaction> currListTransaction = [];
   int indexColor = 0;
 
+  DateTime selectedDate = DateTime.now();
+
   @override
   void initState() {
     super.initState();
@@ -51,15 +53,29 @@ class _StatisticsState extends State<Statistics> {
   }
 
   void fetchTransactions() {
-    // listTransaction[0] = getTransactionToday();
-    // listTransaction[1] = getTransactionWeek();
-    // listTransaction[2] = getTransactionMonth();
-    // listTransaction[3] = getTransactionYear();
     listTransaction[0] = getTransactionToday();
     listTransaction[1] = getTransactionWeek();
     listTransaction[2] = getTransactionMonth();
     listTransaction[3] = getTransactionYear();
     // setState(() {});
+  }
+
+  String _getFormattedDate(int index) {
+    switch (index) {
+      case 0:
+        return DateFormat('MMM dd, yyyy').format(selectedDate.toLocal());
+      case 1:
+        final startOfWeek =
+            selectedDate.subtract(Duration(days: selectedDate.weekday - 1));
+        final endOfWeek = startOfWeek.add(const Duration(days: 6));
+        return '${DateFormat('dd').format(startOfWeek)}-${DateFormat('dd').format(endOfWeek)} ${DateFormat('MMM, yyyy').format(selectedDate.toLocal())}';
+      case 2:
+        return DateFormat('MMM yyyy').format(selectedDate.toLocal());
+      case 3:
+        return DateFormat('yyyy').format(selectedDate.toLocal());
+      default:
+        return '';
+    }
   }
 
   @override
@@ -139,7 +155,6 @@ class _StatisticsState extends State<Statistics> {
                 fontWeight: FontWeight.w700,
               ),
             ),
-
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -152,6 +167,14 @@ class _StatisticsState extends State<Statistics> {
                         setState(() {
                           indexColor = index;
                           notifier.value = index;
+                          if (indexColor == 1) {
+                            selectedDate = DateTime.now().subtract(
+                                Duration(days: DateTime.now().weekday - 1));
+                          } else {
+                            selectedDate = DateTime.now();
+                          }
+
+                          print(selectedDate);
                         });
                       },
                       child: Container(
@@ -180,60 +203,72 @@ class _StatisticsState extends State<Statistics> {
                 ],
               ),
             ),
-            // const SizedBox(
-            //   height: 20,
-            // ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 15),
-            // child: Row(
-            //   mainAxisAlignment: MainAxisAlignment.start,
-            //   children: [
-            // Container(
-            //   width: 120,
-            //   height: 40,
-            //   decoration: BoxDecoration(
-            //       border: Border.all(color: Colors.grey, width: 2),
-            //       borderRadius: BorderRadius.circular(8)),
-            //   child: const Row(
-            //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //       children: [
-            //         Text(
-            //           'Expense',
-            //           style: TextStyle(
-            //               color: Colors.grey,
-            //               fontSize: 16,
-            //               fontWeight: FontWeight.bold),
-            //         ),
-            //         Icon(
-            //           Icons.arrow_downward_sharp,
-            //           color: Colors.grey,
-            //         )
-            //       ]),
-            // )
-            //     Row(
-            //       mainAxisAlignment: MainAxisAlignment.,
-            //       children: [Text('Income'), Text('200.000')],
-            //     ),
-            //     Row(
-            //       children: [Text('Expense'), Text('200.000')],
-            //     ),
-            //   ],
-            // ),
-            // ),
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      _getFormattedDate(indexColor),
+                      style: const TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                if (indexColor == 0) {
+                                  selectedDate = selectedDate
+                                      .subtract(const Duration(days: 1));
+                                } else if (indexColor == 1) {
+                                  selectedDate = selectedDate
+                                      .subtract(const Duration(days: 7));
+                                } else if (indexColor == 2) {
+                                  selectedDate = DateTime(selectedDate.year,
+                                      selectedDate.month - 1, selectedDate.day);
+                                } else if (indexColor == 3) {
+                                  selectedDate = DateTime(selectedDate.year - 1,
+                                      selectedDate.month, selectedDate.day);
+                                }
+                              });
+                              print(selectedDate);
+                            },
+                            icon: const Icon(Icons.arrow_back_ios_new)),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                if (indexColor == 0) {
+                                  selectedDate =
+                                      selectedDate.add(const Duration(days: 1));
+                                } else if (indexColor == 1) {
+                                  selectedDate =
+                                      selectedDate.add(const Duration(days: 7));
+                                } else if (indexColor == 2) {
+                                  selectedDate = DateTime(selectedDate.year,
+                                      selectedDate.month + 1, selectedDate.day);
+                                } else if (indexColor == 3) {
+                                  selectedDate = DateTime(selectedDate.year + 1,
+                                      selectedDate.month, selectedDate.day);
+                                }
+                              });
+                              print(selectedDate);
+                            },
+                            icon: const Icon(Icons.arrow_forward_ios)),
+                      ],
+                    )
+                  ],
+                )),
             const SizedBox(
               height: 20,
             ),
             const SplineChart(),
-            // indexColor == 0
-            //     ? const PieChartDay()
-            //     : Chart(
-            //         currIndex: indexColor,
-            //       ),
-            // indexColor != 0
-            //     ? BarChartDetail(
-            //         currIndex: indexColor,
-            //       )
-            //     : const PieChartSample2(),
             const SizedBox(
               height: 20,
             ),

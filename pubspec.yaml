@@ -38,6 +38,8 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   fl_chart: ^0.63.0
+  syncfusion_flutter_datepicker: ^21.2.10
+  table_calendar: ^3.0.9
 
 dev_dependencies:
   flutter_test:

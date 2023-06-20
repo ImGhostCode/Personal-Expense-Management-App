@@ -38,7 +38,7 @@ int totalExpense() {
   for (var i = 0; i < transactions.length; i++) {
     listAmount.add(transactions[i].type == 'Income'
         ? 0
-        : int.parse(transactions[i].amount) * -1);
+        : int.parse(transactions[i].amount));
   }
   totals = listAmount.reduce((value, element) => value + element);
   return totals;
@@ -73,7 +73,6 @@ List<Transaction> getExpenseTransactionToday() {
 
 List<Transaction> getTransactionWeek() {
   List<Transaction> result = [];
-  DateTime date = DateTime.now();
   var transactions = box.values.toList();
   for (var i = 0; i < transactions.length; i++) {
     // if (date.day - 7 <= transactions[i].createAt.day &&
@@ -267,8 +266,11 @@ Map<int, double> calculateWeeklyExpense() {
 
 bool isWithinCurrentWeek(DateTime date) {
   var now = DateTime.now();
-  var startOfWeek = now.subtract(Duration(days: now.weekday - 1));
-  var endOfWeek = startOfWeek.add(const Duration(days: 6));
+  var startOfWeek = now.subtract(Duration(days: now.weekday));
+  var endOfWeek = startOfWeek.add(const Duration(days: 7));
+  print(date);
+  print(startOfWeek);
+  print(endOfWeek);
   return date.isAfter(startOfWeek) && date.isBefore(endOfWeek);
 }
 
@@ -361,5 +363,5 @@ String formatCurrency(int value) {
     locale: 'vi_VN', // Vietnamese locale for formatting
   );
 
-  return '${format.format(value)} vnđ'; // Append ' vnđ' to the formatted value
+  return '${format.format(value)}vnđ'; // Append ' vnđ' to the formatted value
 }

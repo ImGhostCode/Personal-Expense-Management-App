@@ -31,10 +31,12 @@ class _SplineChartState extends State<SplineChart> {
       child: SfCartesianChart(series: <ChartSeries>[
         // Renders spline chart
         SplineSeries<ChartData, int>(
+            color: Colors.green,
             dataSource: chartData1,
             xValueMapper: (ChartData data, _) => data.x,
             yValueMapper: (ChartData data, _) => data.y),
         SplineSeries<ChartData, int>(
+            color: Colors.red,
             dataSource: chartData2,
             xValueMapper: (ChartData data1, _) => data1.x,
             yValueMapper: (ChartData data1, _) => data1.y)
