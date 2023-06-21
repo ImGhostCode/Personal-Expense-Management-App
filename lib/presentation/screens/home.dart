@@ -18,6 +18,14 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   var transactionHistory;
   final box = Hive.box<Transaction>('transactions');
+  // late int totalIn;
+  // late int totalEx;
+  // late int total;
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

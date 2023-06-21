@@ -3,37 +3,34 @@ import 'package:expanse_management/data/utilty.dart';
 import 'package:expanse_management/domain/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'package:table_calendar/table_calendar.dart';
-import 'package:intl/intl.dart';
 
 class Statistics extends StatefulWidget {
   const Statistics({super.key});
+
+  get selectedDate => null;
 
   @override
   State<Statistics> createState() => _StatisticsState();
 }
 
-ValueNotifier notifier = ValueNotifier(0);
+ValueNotifier<int> notifier = ValueNotifier<int>(0);
 
 class _StatisticsState extends State<Statistics> {
   final box = Hive.box<Transaction>('transactions');
 
   List day = ['Day', 'Week', 'Month', 'Year'];
-  List listTransaction = [
-    getTransactionToday(),
-    getTransactionWeek(),
-    getTransactionMonth(),
-    getTransactionYear()
-  ];
+  List listTransaction = [[], [], [], []];
   List<Transaction> currListTransaction = [];
   int indexColor = 0;
 
   DateTime selectedDate = DateTime.now();
-
+  late int totalIn;
+  late int totalEx;
+  late int total;
   @override
   void initState() {
     super.initState();
+    notifier.value = 0;
     box.listenable().addListener(updateNotifier);
     fetchTransactions();
   }
@@ -41,103 +38,49 @@ class _StatisticsState extends State<Statistics> {
   @override
   void dispose() {
     box.listenable().removeListener(updateNotifier);
-    // box.listenable().removeListener(fetchTransactions);
 
     super.dispose();
   }
 
   void updateNotifier() {
-    // notifier.value =
-    //     notifier.value + 1; // Update the value to trigger a rebuild
     fetchTransactions();
   }
 
   void fetchTransactions() {
-    listTransaction[0] = getTransactionToday();
-    listTransaction[1] = getTransactionWeek();
-    listTransaction[2] = getTransactionMonth();
-    listTransaction[3] = getTransactionYear();
-    // setState(() {});
-  }
-
-  String _getFormattedDate(int index) {
-    switch (index) {
-      case 0:
-        return DateFormat('MMM dd, yyyy').format(selectedDate.toLocal());
-      case 1:
-        final startOfWeek =
-            selectedDate.subtract(Duration(days: selectedDate.weekday - 1));
-        final endOfWeek = startOfWeek.add(const Duration(days: 6));
-        return '${DateFormat('dd').format(startOfWeek)}-${DateFormat('dd').format(endOfWeek)} ${DateFormat('MMM, yyyy').format(selectedDate.toLocal())}';
-      case 2:
-        return DateFormat('MMM yyyy').format(selectedDate.toLocal());
-      case 3:
-        return DateFormat('yyyy').format(selectedDate.toLocal());
-      default:
-        return '';
-    }
+    listTransaction[0] = getTransactionToday(selectedDate);
+    listTransaction[1] = getTransactionWeek(selectedDate);
+    listTransaction[2] = getTransactionMonth(selectedDate);
+    listTransaction[3] = getTransactionYear(selectedDate);
+    totalIn = totalFilterdIncome(currListTransaction);
+    totalEx = totalFilterdExpense(currListTransaction);
+    total = totalIn - totalEx;
+    print(
+      'total: $total $totalIn $totalEx',
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: ValueListenableBuilder(
+          child: ValueListenableBuilder<int>(
         valueListenable: notifier,
-        builder: (BuildContext context, dynamic value, Widget? child) {
-          currListTransaction = listTransaction[value % listTransaction.length];
+        builder: (BuildContext context, int value, Widget? child) {
+          print(value);
+          print(currListTransaction);
+          currListTransaction = listTransaction[value];
+          totalIn = totalFilterdIncome(currListTransaction);
+          totalEx = totalFilterdExpense(currListTransaction);
+          total = totalIn - totalEx;
+          print(
+            'total: $total $totalIn $totalEx',
+          );
+          fetchTransactions();
           return customScrollView();
         },
       )),
     );
   }
-
-  // Widget makeTransactionsIcon() {
-  //   const width = 4.5;
-  //   const space = 3.5;
-  //   return Row(
-  //     mainAxisSize: MainAxisSize.min,
-  //     children: <Widget>[
-  //       Container(
-  //         width: width,
-  //         height: 10,
-  //         color: const Color(0xff368983).withOpacity(0.4),
-  //       ),
-  //       const SizedBox(
-  //         width: space,
-  //       ),
-  //       Container(
-  //         width: width,
-  //         height: 28,
-  //         color: const Color(0xff368983).withOpacity(0.8),
-  //       ),
-  //       const SizedBox(
-  //         width: space,
-  //       ),
-  //       Container(
-  //         width: width,
-  //         height: 42,
-  //         color: const Color(0xff368983).withOpacity(1),
-  //       ),
-  //       const SizedBox(
-  //         width: space,
-  //       ),
-  //       Container(
-  //         width: width,
-  //         height: 28,
-  //         color: const Color(0xff368983).withOpacity(0.8),
-  //       ),
-  //       const SizedBox(
-  //         width: space,
-  //       ),
-  //       Container(
-  //         width: width,
-  //         height: 10,
-  //         color: const Color(0xff368983).withOpacity(0.4),
-  //       ),
-  //     ],
-  //   );
-  // }
 
   CustomScrollView customScrollView() {
     return CustomScrollView(
@@ -174,8 +117,9 @@ class _StatisticsState extends State<Statistics> {
                             selectedDate = DateTime.now();
                           }
 
-                          print(selectedDate);
+                          fetchTransactions();
                         });
+                        print(selectedDate);
                       },
                       child: Container(
                         height: 40,
@@ -212,7 +156,7 @@ class _StatisticsState extends State<Statistics> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      _getFormattedDate(indexColor),
+                      getFormattedDate(indexColor, selectedDate),
                       style: const TextStyle(
                           fontSize: 15, fontWeight: FontWeight.bold),
                     ),
@@ -235,6 +179,7 @@ class _StatisticsState extends State<Statistics> {
                                       selectedDate.month, selectedDate.day);
                                 }
                               });
+                              fetchTransactions();
                               print(selectedDate);
                             },
                             icon: const Icon(Icons.arrow_back_ios_new)),
@@ -257,6 +202,7 @@ class _StatisticsState extends State<Statistics> {
                                   selectedDate = DateTime(selectedDate.year + 1,
                                       selectedDate.month, selectedDate.day);
                                 }
+                                fetchTransactions();
                               });
                               print(selectedDate);
                             },
@@ -268,18 +214,18 @@ class _StatisticsState extends State<Statistics> {
             const SizedBox(
               height: 20,
             ),
-            const SplineChart(),
+            SplineChart(transactions: currListTransaction),
             const SizedBox(
               height: 20,
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
+                      const Row(
                         children: [
                           CircleAvatar(
                             radius: 13,
@@ -302,8 +248,8 @@ class _StatisticsState extends State<Statistics> {
                         ],
                       ),
                       Text(
-                        '1234 vnd',
-                        style: TextStyle(
+                        formatCurrency(totalIn),
+                        style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
                           color: Colors.green,
@@ -311,13 +257,13 @@ class _StatisticsState extends State<Statistics> {
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
+                      const Row(
                         children: [
                           CircleAvatar(
                             radius: 13,
@@ -340,8 +286,8 @@ class _StatisticsState extends State<Statistics> {
                         ],
                       ),
                       Text(
-                        '1234 vnd',
-                        style: TextStyle(
+                        formatCurrency(totalEx),
+                        style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
                           color: Colors.red,
@@ -349,21 +295,21 @@ class _StatisticsState extends State<Statistics> {
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
-                  Divider(
+                  const Divider(
                     height: 1,
                     color: Colors.grey,
                     thickness: 1,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
+                      const Row(
                         children: [
                           SizedBox(width: 30),
                           Text(
@@ -377,8 +323,8 @@ class _StatisticsState extends State<Statistics> {
                         ],
                       ),
                       Text(
-                        '1234 vnd',
-                        style: TextStyle(
+                        formatCurrency(total),
+                        style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
                           color: Colors.black,

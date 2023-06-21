@@ -6,7 +6,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class PieChartDay extends StatefulWidget {
-  const PieChartDay({super.key});
+  const PieChartDay({super.key, required listTransactions});
 
   @override
   State<StatefulWidget> createState() => PieChart2State();

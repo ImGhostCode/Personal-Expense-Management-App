@@ -1,8 +1,11 @@
+import 'package:expanse_management/domain/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class SplineChart extends StatefulWidget {
-  const SplineChart({super.key});
+  final List<Transaction> transactions;
+
+  const SplineChart({super.key, required this.transactions});
 
   @override
   State<SplineChart> createState() => _SplineChartState();
@@ -10,7 +13,13 @@ class SplineChart extends StatefulWidget {
 
 class _SplineChartState extends State<SplineChart> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print('test ${widget.transactions}');
     final List<ChartData> chartData1 = [
       ChartData(2010, 35),
       ChartData(2011, 13),

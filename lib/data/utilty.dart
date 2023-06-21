@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:expanse_management/domain/models/transaction_model.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
@@ -32,6 +30,17 @@ int totalIncome() {
   return totals;
 }
 
+int totalFilterdIncome(List<Transaction> transactions) {
+  List listAmount = [0, 0];
+  for (var i = 0; i < transactions.length; i++) {
+    listAmount.add(transactions[i].type == 'Income'
+        ? int.parse(transactions[i].amount)
+        : 0);
+  }
+  totals = listAmount.reduce((value, element) => value + element);
+  return totals;
+}
+
 int totalExpense() {
   var transactions = box.values.toList();
   List listAmount = [0, 0];
@@ -44,12 +53,22 @@ int totalExpense() {
   return totals;
 }
 
-List<Transaction> getTransactionToday() {
+int totalFilterdExpense(List<Transaction> transactions) {
+  List listAmount = [0, 0];
+  for (var i = 0; i < transactions.length; i++) {
+    listAmount.add(transactions[i].type == 'Income'
+        ? 0
+        : int.parse(transactions[i].amount));
+  }
+  totals = listAmount.reduce((value, element) => value + element);
+  return totals;
+}
+
+List<Transaction> getTransactionToday(DateTime selectedDay) {
   List<Transaction> result = [];
   var transactions = box.values.toList();
-  DateTime date = DateTime.now();
   for (var i = 0; i < transactions.length; i++) {
-    if (transactions[i].createAt.day == date.day) {
+    if (transactions[i].createAt.day == selectedDay.day) {
       result.add(transactions[i]);
     }
   }
@@ -71,7 +90,7 @@ List<Transaction> getExpenseTransactionToday() {
   return result;
 }
 
-List<Transaction> getTransactionWeek() {
+List<Transaction> getTransactionWeek(DateTime selectedDate) {
   List<Transaction> result = [];
   var transactions = box.values.toList();
   for (var i = 0; i < transactions.length; i++) {
@@ -79,7 +98,7 @@ List<Transaction> getTransactionWeek() {
     //     transactions[i].createAt.day <= date.day) {
     //   result.add(transactions[i]);
     // }
-    if (isWithinCurrentWeek(transactions[i].createAt)) {
+    if (isWithinCurrentWeek(transactions[i].createAt, selectedDate)) {
       result.add(transactions[i]);
     }
   }
@@ -89,197 +108,20 @@ List<Transaction> getTransactionWeek() {
   return result;
 }
 
-// Map<DateTime, double> calculateTotalIncomeInCurrentWeek() {
-//   var incomeInCurrentWeek = <DateTime, double>{};
-
-//   var currentDate = DateTime.now();
-//   var startOfWeek =
-//       currentDate.subtract(Duration(days: currentDate.weekday - 1));
-
-//   for (var i = 0; i < box.length; i++) {
-//     var transaction = box.getAt(i);
-
-//     if (transaction != null &&
-//         transaction.type == 'Income' &&
-//         transaction.createAt.isAfter(startOfWeek)) {
-//       var transactionDate = transaction.createAt;
-//       var transactionAmount = double.tryParse(transaction.amount) ?? 0.0;
-
-//       if (incomeInCurrentWeek.containsKey(transactionDate)) {
-//         incomeInCurrentWeek[transactionDate] =
-//             incomeInCurrentWeek[transactionDate]! + transactionAmount;
-//       } else {
-//         incomeInCurrentWeek[transactionDate] = transactionAmount;
-//       }
-//     }
-//   }
-
-//   return incomeInCurrentWeek;
-// }
-
-Map<int, double> calculateWeeklyIncome() {
-  // Mở box để truy cập dữ liệu giao dịch
-  // var transactionBox = await Hive.openBox<Transaction>('transactions');
-
-  // Tạo map để lưu trữ tổng income theo từng ngày trong tuần
-  Map<int, double> weeklyIncome = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0};
-
-  // Lặp qua tất cả các giao dịch trong box
-  for (var i = 0; i < box.length; i++) {
-    var transaction = box.getAt(i);
-
-    // Kiểm tra xem giao dịch có thuộc loại "Income" hay không
-    if (transaction?.type == 'Income') {
-      var transactionDate = transaction?.createAt;
-
-      // Kiểm tra xem ngày của giao dịch có thuộc tuần hiện tại hay không
-      if (isWithinCurrentWeek(transactionDate!)) {
-        // Tính tổng income cho ngày đó
-        var dailyIncome = weeklyIncome[transactionDate.weekday] ?? 0;
-        dailyIncome += double.parse(transaction!.amount);
-        weeklyIncome[transactionDate.weekday] = dailyIncome;
-      }
-    }
-  }
-
-  // Đóng box sau khi hoàn thành
-  // await transactionBox.close();
-
-  // Trả về kết quả tổng income theo từng ngày trong tuần
-  print(weeklyIncome);
-  return weeklyIncome;
-}
-
-Map<int, double> calculateMonthlyIncome() {
-  // Mở box để truy cập dữ liệu giao dịch
-  // var transactionBox = await Hive.openBox<Transaction>('transactions');
-
-  // Tạo map để lưu trữ tổng income theo từng ngày trong tuần
-  Map<int, double> monthlyIncome = {
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 0,
-    6: 0,
-    7: 0,
-    8: 0,
-    9: 0,
-    10: 0,
-    11: 0,
-    12: 0
-  };
-
-  // Lặp qua tất cả các giao dịch trong box
-  for (var i = 0; i < box.length; i++) {
-    var transaction = box.getAt(i);
-    int currYear = DateTime.now().year;
-    // Kiểm tra xem giao dịch có thuộc loại "Income" hay không
-    if (transaction?.createAt.year == currYear &&
-        transaction?.type == 'Income') {
-      var transactionDate = transaction?.createAt;
-
-      // Kiểm tra xem ngày của giao dịch có thuộc tuần hiện tại hay không
-      // if (isWithinCurrentWeek(transactionDate!)) {
-      // Tính tổng income cho ngày đó
-      var monthIncome = monthlyIncome[transactionDate?.month] ?? 0;
-      monthIncome += double.parse(transaction!.amount);
-      monthlyIncome[transactionDate!.month] = monthIncome;
-      // }
-    }
-  }
-
-  // Đóng box sau khi hoàn thành
-  // await transactionBox.close();
-
-  // Trả về kết quả tổng income theo từng ngày trong tuần
-  print(monthlyIncome);
-  return monthlyIncome;
-}
-
-Map<int, double> calculateMonthlyExpense() {
-  // Mở box để truy cập dữ liệu giao dịch
-  // var transactionBox = await Hive.openBox<Transaction>('transactions');
-
-  // Tạo map để lưu trữ tổng income theo từng ngày trong tuần
-  Map<int, double> monthlyExpense = {};
-
-  // Lặp qua tất cả các giao dịch trong box
-  for (var i = 0; i < box.length; i++) {
-    var transaction = box.getAt(i);
-    int currYear = DateTime.now().year;
-    // Kiểm tra xem giao dịch có thuộc loại "Income" hay không
-    if (transaction?.createAt.year == currYear &&
-        transaction?.type == 'Expense') {
-      var transactionDate = transaction?.createAt;
-
-      // Kiểm tra xem ngày của giao dịch có thuộc tuần hiện tại hay không
-      // if (isWithinCurrentWeek(transactionDate!)) {
-      // Tính tổng income cho ngày đó
-      var monthExpense = monthlyExpense[transactionDate?.month] ?? 0;
-      monthExpense += double.parse(transaction!.amount);
-      monthlyExpense[transactionDate!.month] = monthExpense;
-      // }
-    }
-  }
-
-  // Đóng box sau khi hoàn thành
-  // await transactionBox.close();
-
-  // Trả về kết quả tổng income theo từng ngày trong tuần
-  print(monthlyExpense);
-  return monthlyExpense;
-}
-
-Map<int, double> calculateWeeklyExpense() {
-  // Mở box để truy cập dữ liệu giao dịch
-  // var transactionBox = await Hive.openBox<Transaction>('transactions');
-
-  // Tạo map để lưu trữ tổng income theo từng ngày trong tuần
-  Map<int, double> weeklyExpense = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0};
-
-  // Lặp qua tất cả các giao dịch trong box
-  for (var i = 0; i < box.length; i++) {
-    var transaction = box.getAt(i);
-
-    // Kiểm tra xem giao dịch có thuộc loại "Income" hay không
-    if (transaction?.type == 'Expense') {
-      var transactionDate = transaction?.createAt;
-
-      // Kiểm tra xem ngày của giao dịch có thuộc tuần hiện tại hay không
-      if (isWithinCurrentWeek(transactionDate!)) {
-        // Tính tổng income cho ngày đó
-        var dailyIncome = weeklyExpense[transactionDate.weekday] ?? 0;
-        dailyIncome += double.parse(transaction!.amount);
-        weeklyExpense[transactionDate.weekday] = dailyIncome;
-      }
-    }
-  }
-
-  // Đóng box sau khi hoàn thành
-  // await transactionBox.close();
-
-  // Trả về kết quả tổng income theo từng ngày trong tuần
-  print(weeklyExpense);
-  return weeklyExpense;
-}
-
-bool isWithinCurrentWeek(DateTime date) {
-  var now = DateTime.now();
-  var startOfWeek = now.subtract(Duration(days: now.weekday));
+bool isWithinCurrentWeek(DateTime date, DateTime selectedDate) {
+  var startOfWeek = selectedDate;
   var endOfWeek = startOfWeek.add(const Duration(days: 7));
-  print(date);
-  print(startOfWeek);
-  print(endOfWeek);
+  // print(date);
+  // print(startOfWeek);
+  // print(endOfWeek);
   return date.isAfter(startOfWeek) && date.isBefore(endOfWeek);
 }
 
-List<Transaction> getTransactionMonth() {
+List<Transaction> getTransactionMonth(DateTime selectedDate) {
   List<Transaction> result = [];
   var transactions = box.values.toList();
-  DateTime date = DateTime.now();
   for (var i = 0; i < transactions.length; i++) {
-    if (transactions[i].createAt.month == date.month) {
+    if (transactions[i].createAt.month == selectedDate.month) {
       result.add(transactions[i]);
     }
   }
@@ -289,12 +131,11 @@ List<Transaction> getTransactionMonth() {
   return result;
 }
 
-List<Transaction> getTransactionYear() {
+List<Transaction> getTransactionYear(DateTime selectedDate) {
   List<Transaction> result = [];
   var transactions = box.values.toList();
-  DateTime date = DateTime.now();
   for (var i = 0; i < transactions.length; i++) {
-    if (transactions[i].createAt.year == date.year) {
+    if (transactions[i].createAt.year == selectedDate.year) {
       result.add(transactions[i]);
     }
   }
@@ -342,18 +183,8 @@ List time(List<Transaction> transactions, bool hour, bool day, bool month) {
     a.clear();
     c = counter;
   }
-  print(total);
+  // print(total);
   return total;
-}
-
-double calculateMaxY(Map<int, double> income, Map<int, double> expense) {
-  return max(
-      income.values
-          .toList()
-          .reduce((value, element) => value > element ? value : element),
-      expense.values
-          .toList()
-          .reduce((value, element) => value > element ? value : element));
 }
 
 String formatCurrency(int value) {
@@ -364,4 +195,22 @@ String formatCurrency(int value) {
   );
 
   return '${format.format(value)}vnđ'; // Append ' vnđ' to the formatted value
+}
+
+String getFormattedDate(int index, DateTime selectedDate) {
+  switch (index) {
+    case 0:
+      return DateFormat('MMM dd, yyyy').format(selectedDate.toLocal());
+    case 1:
+      final startOfWeek =
+          selectedDate.subtract(Duration(days: selectedDate.weekday - 1));
+      final endOfWeek = startOfWeek.add(const Duration(days: 6));
+      return '${DateFormat('dd').format(startOfWeek)}-${DateFormat('dd').format(endOfWeek)} ${DateFormat('MMM, yyyy').format(selectedDate.toLocal())}';
+    case 2:
+      return DateFormat('MMM yyyy').format(selectedDate.toLocal());
+    case 3:
+      return DateFormat('yyyy').format(selectedDate.toLocal());
+    default:
+      return '';
+  }
 }
