@@ -1,61 +1,139 @@
+import 'package:expanse_management/Constants/color.dart';
 import 'package:expanse_management/domain/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:intl/intl.dart';
 
 class SplineChart extends StatefulWidget {
   final List<Transaction> transactions;
-
-  const SplineChart({super.key, required this.transactions});
+  final int currIndex;
+  const SplineChart(
+      {super.key, required this.transactions, required this.currIndex});
 
   @override
   State<SplineChart> createState() => _SplineChartState();
 }
 
 class _SplineChartState extends State<SplineChart> {
+  late TooltipBehavior _tooltipBehavior;
+  List<String> customFormats = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+  ];
+  List<ChartData> chartDataIncome = [];
+  List<ChartData> chartDataExpense = [];
+
+  DateFormat dateFormat = DateFormat.MMM();
+
   @override
   void initState() {
+    _tooltipBehavior = TooltipBehavior(enable: true, color: primaryColor);
     super.initState();
+    calculateChartData();
+  }
+
+  @override
+  void didUpdateWidget(SplineChart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.currIndex != oldWidget.currIndex ||
+        widget.transactions != oldWidget.transactions) {
+      calculateChartData();
+    }
+  }
+
+  void calculateChartData() {
+    chartDataIncome.clear();
+    chartDataExpense.clear();
+
+    widget.transactions.forEach((element) {
+      String formattedDate =
+          getFormattedDate(widget.currIndex, element.createAt);
+      if (element.category.type == 'Income') {
+        chartDataIncome
+            .add(ChartData(formattedDate, double.parse(element.amount)));
+      } else {
+        chartDataExpense
+            .add(ChartData(formattedDate, double.parse(element.amount)));
+      }
+    });
+  }
+
+  String getFormattedDate(int index, DateTime dateTime) {
+    if (index == 3) {
+      return customFormats[dateTime.month - 1];
+    } else {
+      return '${dateFormat.format(dateTime)} ${dateTime.day}';
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    print('test ${widget.transactions}');
-    final List<ChartData> chartData1 = [
-      ChartData(2010, 35),
-      ChartData(2011, 13),
-      ChartData(2012, 34),
-      ChartData(2013, 27),
-      ChartData(2014, 40)
-    ];
-    final List<ChartData> chartData2 = [
-      ChartData(2010, 23),
-      ChartData(2011, 53),
-      ChartData(2012, 24),
-      ChartData(2013, 57),
-      ChartData(2014, 30)
-    ];
+    print('rebuild');
+
     return SizedBox(
       width: double.infinity,
       height: 350,
-      child: SfCartesianChart(series: <ChartSeries>[
-        // Renders spline chart
-        SplineSeries<ChartData, int>(
+      child: SfCartesianChart(
+        primaryXAxis: CategoryAxis(
+          labelRotation: -45,
+          labelIntersectAction: AxisLabelIntersectAction.rotate45,
+        ),
+        primaryYAxis: NumericAxis(
+          numberFormat: NumberFormat.compact(),
+          maximum: 20000000,
+        ),
+        legend: Legend(
+          isVisible: true,
+          position: LegendPosition.bottom,
+          toggleSeriesVisibility: true,
+        ),
+        //Enables the tooltip for all the series
+        tooltipBehavior: _tooltipBehavior,
+        series: <ChartSeries>[
+          SplineSeries<ChartData, String>(
+            name: 'Income',
             color: Colors.green,
-            dataSource: chartData1,
+            width: 5,
+            dataSource: chartDataIncome,
             xValueMapper: (ChartData data, _) => data.x,
-            yValueMapper: (ChartData data, _) => data.y),
-        SplineSeries<ChartData, int>(
+            yValueMapper: (ChartData data, _) => data.y!,
+            markerSettings: const MarkerSettings(isVisible: true),
+            dataLabelSettings: const DataLabelSettings(
+                // Renders the data label
+                isVisible: false),
+            enableTooltip: true,
+          ),
+          SplineSeries<ChartData, String>(
+            name: 'Expense',
+            width: 5,
             color: Colors.red,
-            dataSource: chartData2,
+            dataSource: chartDataExpense,
             xValueMapper: (ChartData data1, _) => data1.x,
-            yValueMapper: (ChartData data1, _) => data1.y)
-      ]),
+            yValueMapper: (ChartData data1, _) => data1.y!,
+            markerSettings: const MarkerSettings(isVisible: true),
+            dataLabelSettings: const DataLabelSettings(
+                // Renders the data label
+                isVisible: false),
+            enableTooltip: true,
+          ),
+        ],
+      ),
     );
   }
 }
 
 class ChartData {
   ChartData(this.x, this.y);
-  final int x;
+  final String x;
   final double? y;
 }

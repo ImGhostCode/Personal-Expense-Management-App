@@ -228,8 +228,8 @@ class _AddScreenState extends State<AddScreen> {
           onPressed: () async {
             DateTime? newDate = await showDatePicker(
                 context: context,
-                initialDate: DateTime(DateTime.now().day),
-                firstDate: DateTime(2022),
+                initialDate: DateTime.now(),
+                firstDate: DateTime(2020, 1, 1),
                 lastDate: DateTime(2030));
             if (newDate == null) return;
             setState(() {

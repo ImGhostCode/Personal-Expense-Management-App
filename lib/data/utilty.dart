@@ -110,11 +110,12 @@ List<Transaction> getTransactionWeek(DateTime selectedDate) {
 
 bool isWithinCurrentWeek(DateTime date, DateTime selectedDate) {
   var startOfWeek = selectedDate;
-  var endOfWeek = startOfWeek.add(const Duration(days: 7));
+  var endOfWeek = startOfWeek.add(const Duration(days: 6));
   // print(date);
   // print(startOfWeek);
   // print(endOfWeek);
-  return date.isAfter(startOfWeek) && date.isBefore(endOfWeek);
+  return date.isAfter(startOfWeek.subtract(const Duration(days: 1))) &&
+      date.isBefore(endOfWeek);
 }
 
 List<Transaction> getTransactionMonth(DateTime selectedDate) {

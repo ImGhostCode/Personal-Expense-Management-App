@@ -54,9 +54,9 @@ class _StatisticsState extends State<Statistics> {
     totalIn = totalFilterdIncome(currListTransaction);
     totalEx = totalFilterdExpense(currListTransaction);
     total = totalIn - totalEx;
-    print(
-      'total: $total $totalIn $totalEx',
-    );
+    // print(
+    //   'total: $total $totalIn $totalEx',
+    // );
   }
 
   @override
@@ -66,15 +66,15 @@ class _StatisticsState extends State<Statistics> {
           child: ValueListenableBuilder<int>(
         valueListenable: notifier,
         builder: (BuildContext context, int value, Widget? child) {
-          print(value);
-          print(currListTransaction);
+          // print(value);
+          // print(currListTransaction);
           currListTransaction = listTransaction[value];
           totalIn = totalFilterdIncome(currListTransaction);
           totalEx = totalFilterdExpense(currListTransaction);
           total = totalIn - totalEx;
-          print(
-            'total: $total $totalIn $totalEx',
-          );
+          // print(
+          //   'total: $total $totalIn $totalEx',
+          // );
           fetchTransactions();
           return customScrollView();
         },
@@ -119,7 +119,7 @@ class _StatisticsState extends State<Statistics> {
 
                           fetchTransactions();
                         });
-                        print(selectedDate);
+                        // print(selectedDate);
                       },
                       child: Container(
                         height: 40,
@@ -180,7 +180,7 @@ class _StatisticsState extends State<Statistics> {
                                 }
                               });
                               fetchTransactions();
-                              print(selectedDate);
+                              // print(selectedDate);
                             },
                             icon: const Icon(Icons.arrow_back_ios_new)),
                         const SizedBox(
@@ -204,7 +204,7 @@ class _StatisticsState extends State<Statistics> {
                                 }
                                 fetchTransactions();
                               });
-                              print(selectedDate);
+                              // print(selectedDate);
                             },
                             icon: const Icon(Icons.arrow_forward_ios)),
                       ],
@@ -214,7 +214,10 @@ class _StatisticsState extends State<Statistics> {
             const SizedBox(
               height: 20,
             ),
-            SplineChart(transactions: currListTransaction),
+            SplineChart(
+              transactions: currListTransaction,
+              currIndex: indexColor,
+            ),
             const SizedBox(
               height: 20,
             ),
