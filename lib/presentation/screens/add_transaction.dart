@@ -34,6 +34,8 @@ class _AddScreenState extends State<AddScreen> {
   final TextEditingController amountC = TextEditingController();
   FocusNode amountFocus = FocusNode();
 
+  bool isAmountValid = true;
+
   @override
   void initState() {
     super.initState();
@@ -89,30 +91,33 @@ class _AddScreenState extends State<AddScreen> {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20), color: Colors.white),
-      height: 650,
+      height: 680,
       width: 360,
       child: Column(children: [
         const SizedBox(
-          height: 50,
+          height: 35,
         ),
         typeField(),
         const SizedBox(
-          height: 50,
+          height: 35,
         ),
         noteField(),
         const SizedBox(
-          height: 50,
+          height: 35,
         ),
         amountField(),
         const SizedBox(
-          height: 50,
+          height: 35,
         ),
         categoryField(),
         const SizedBox(
-          height: 50,
+          height: 35,
         ),
         timeField(),
-        const Spacer(),
+        // const Spacer(),
+        const SizedBox(
+          height: 35,
+        ),
         addTransaction(),
         const SizedBox(
           height: 20,
@@ -265,7 +270,19 @@ class _AddScreenState extends State<AddScreen> {
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(width: 2, color: primaryColor)),
+          errorText: isAmountValid ? null : 'Amount must be greater than 0',
         ),
+        onChanged: (value) {
+          setState(() {
+            if (value.isEmpty) {
+              isAmountValid =
+                  true; // Reset the validation if the field is empty
+            } else {
+              isAmountValid =
+                  double.tryParse(value) != null && double.parse(value) > 0;
+            }
+          });
+        },
       ),
     );
   }
@@ -355,76 +372,6 @@ class _AddScreenState extends State<AddScreen> {
     );
   }
 
-  // Padding categoryField() {
-  //   final List<CategoryModel> currCategories =
-  //       selectedTypeItem == 'Income' ? incomeCategories : expenseCategories;
-
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(
-  //       horizontal: 15,
-  //     ),
-  //     child: Container(
-  //         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-  //         width: double.infinity,
-  //         decoration: BoxDecoration(
-  //             borderRadius: BorderRadius.circular(10),
-  //             border: Border.all(
-  //               width: 2,
-  //               color: const Color(0xff368983),
-  //             )),
-  //         child: DropdownButton<>(
-  //           value: selectedCategoryItem?.title,
-  //           items: currCategories
-  //               .map((e) => DropdownMenuItem(
-  //                     value: e.title,
-  //                     child: Row(children: [
-  //                       SizedBox(
-  //                         width: 40,
-  //                         child: Image.asset('images/${e.categoryImage}'),
-  //                       ),
-  //                       const SizedBox(
-  //                         width: 10,
-  //                       ),
-  //                       Text(
-  //                         e.title,
-  //                         style: const TextStyle(fontSize: 15),
-  //                       )
-  //                     ]),
-  //                   ))
-  //               .toList(),
-  //           selectedItemBuilder: (BuildContext context) => currCategories
-  //               .map((e) => Row(
-  //                     children: [
-  //                       Container(
-  //                         width: 42,
-  //                         child: Image.asset('images/${e.categoryImage}'),
-  //                       ),
-  //                       const SizedBox(
-  //                         width: 5,
-  //                       ),
-  //                       Text(e.title)
-  //                     ],
-  //                   ))
-  //               .toList(),
-  //           hint: const Text(
-  //             'Name',
-  //             style: TextStyle(color: Colors.grey),
-  //           ),
-  //           dropdownColor: Colors.white,
-  //           isExpanded: true,
-  //           underline: Container(),
-  //           onChanged: ((value) {
-  //             setState(() {
-  //               setState(() {
-  //                 selectedCategoryItem = currCategories.firstWhere(
-  //                   (category) => category.title == value,
-  //                 );
-  //               });
-  //             });
-  //           }),
-  //         )),
-  //   );
-  // }
   Padding categoryField() {
     final List<CategoryModel> currCategories =
         selectedTypeItem == 'Income' ? incomeCategories : expenseCategories;

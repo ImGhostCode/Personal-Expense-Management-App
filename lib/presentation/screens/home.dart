@@ -1,12 +1,8 @@
-import 'dart:ffi';
-
 import 'package:expanse_management/Constants/days.dart';
 import 'package:expanse_management/data/utilty.dart';
-import 'package:expanse_management/domain/models/category_model.dart';
 import 'package:expanse_management/domain/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:expanse_management/data/utilty.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -16,7 +12,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  var transactionHistory;
+  late Transaction transactionHistory;
   final box = Hive.box<Transaction>('transactions');
   // late int totalIn;
   // late int totalEx;
@@ -132,7 +128,7 @@ class _HomeState extends State<Home> {
         formatCurrency(int.parse(transactionHistory.amount)),
         style: TextStyle(
           fontWeight: FontWeight.w600,
-          fontSize: 19,
+          fontSize: 17,
           color:
               transactionHistory.type == 'Expense' ? Colors.red : Colors.green,
         ),
@@ -169,23 +165,149 @@ Stack _head() {
                       ),
                     )),
                 const Padding(
-                  padding: EdgeInsets.only(top: 35, left: 30),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    padding: EdgeInsets.only(top: 40, left: 30),
+                    child: Text(
+                      "Dashboard",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ))
+              ],
+            ),
+          ),
+        ],
+      ),
+      Center(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 100),
+          child: Container(
+            height: 180,
+            width: 330,
+            decoration: BoxDecoration(
+              boxShadow: const [
+                BoxShadow(
+                  color: Color.fromRGBO(47, 125, 121, 0.3),
+                  offset: Offset(0, 6),
+                  blurRadius: 12,
+                  spreadRadius: 6,
+                ),
+              ],
+              color: const Color(0xff368983),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Hello',
+                        'Total Balance',
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
-                          color: Color.fromARGB(255, 224, 223, 223),
+                          color: Colors.white,
+                        ),
+                      ),
+                      Icon(
+                        Icons.more_horiz,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 7),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Row(
+                    children: [
+                      Text(
+                        formatCurrency(totalBalance()),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 25),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 13,
+                            backgroundColor: Colors.green,
+                            child: Icon(
+                              Icons.arrow_upward,
+                              color: Colors.black,
+                              size: 19,
+                            ),
+                          ),
+                          SizedBox(width: 7),
+                          Text(
+                            'Income',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 216, 216, 216),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 13,
+                            backgroundColor: Colors.red,
+                            child: Icon(
+                              Icons.arrow_downward,
+                              color: Colors.black,
+                              size: 19,
+                            ),
+                          ),
+                          SizedBox(width: 7),
+                          Text(
+                            'Expenses',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 216, 216, 216),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        formatCurrency(totalIncome()),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 17,
+                          color: Colors.white,
                         ),
                       ),
                       Text(
-                        'Ho Thanh Liem',
-                        style: TextStyle(
+                        formatCurrency(totalExpense()),
+                        style: const TextStyle(
                           fontWeight: FontWeight.w600,
-                          fontSize: 20,
+                          fontSize: 17,
                           color: Colors.white,
                         ),
                       ),
@@ -194,145 +316,6 @@ Stack _head() {
                 )
               ],
             ),
-          ),
-        ],
-      ),
-      Positioned(
-        top: 140,
-        left: 37,
-        child: Container(
-          height: 180,
-          width: 330,
-          decoration: BoxDecoration(
-            boxShadow: const [
-              BoxShadow(
-                color: Color.fromRGBO(47, 125, 121, 0.3),
-                offset: Offset(0, 6),
-                blurRadius: 12,
-                spreadRadius: 6,
-              ),
-            ],
-            color: const Color(0xff368983),
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Total Balance',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Icon(
-                      Icons.more_horiz,
-                      color: Colors.white,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 7),
-              Padding(
-                padding: const EdgeInsets.only(left: 15),
-                child: Row(
-                  children: [
-                    Text(
-                      formatCurrency(totalBalance()),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 25),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 13,
-                          backgroundColor: Colors.green,
-                          child: Icon(
-                            Icons.arrow_upward,
-                            color: Colors.black,
-                            size: 19,
-                          ),
-                        ),
-                        SizedBox(width: 7),
-                        Text(
-                          'Income',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                            color: Color.fromARGB(255, 216, 216, 216),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 13,
-                          backgroundColor: Colors.red,
-                          child: Icon(
-                            Icons.arrow_downward,
-                            color: Colors.black,
-                            size: 19,
-                          ),
-                        ),
-                        SizedBox(width: 7),
-                        Text(
-                          'Expenses',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                            color: Color.fromARGB(255, 216, 216, 216),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 6),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      formatCurrency(totalIncome()),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 17,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      formatCurrency(totalExpense()),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 17,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
           ),
         ),
       )

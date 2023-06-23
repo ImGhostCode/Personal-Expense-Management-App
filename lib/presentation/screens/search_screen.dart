@@ -1,17 +1,17 @@
 import 'package:expanse_management/Constants/color.dart';
+import 'package:expanse_management/data/utilty.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:expanse_management/domain/models/category_model.dart';
 import 'package:expanse_management/domain/models/transaction_model.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
 
   @override
-  _SearchScreenState createState() => _SearchScreenState();
+  SearchScreenState createState() => SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class SearchScreenState extends State<SearchScreen> {
   late List<Transaction> filteredTransactions;
   TextEditingController searchController = TextEditingController();
 
@@ -91,10 +91,10 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                   ),
                   trailing: Text(
-                    '\$${transaction.amount}',
+                    formatCurrency(int.parse(transaction.amount)),
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      fontSize: 19,
+                      fontSize: 17,
                       color: transaction.type == 'Expense'
                           ? Colors.red
                           : Colors.green,

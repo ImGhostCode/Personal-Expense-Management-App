@@ -386,10 +386,10 @@ class _StatisticsState extends State<Statistics> {
                 ),
               ),
               trailing: Text(
-                '\$${currListTransaction[index].amount}',
+                formatCurrency(int.parse(currListTransaction[index].amount)),
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  fontSize: 19,
+                  fontSize: 17,
                   color: currListTransaction[index].type == 'Expense'
                       ? Colors.red
                       : Colors.green,

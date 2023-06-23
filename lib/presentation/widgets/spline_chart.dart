@@ -2,6 +2,7 @@ import 'package:expanse_management/Constants/color.dart';
 import 'package:expanse_management/domain/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 
 class SplineChart extends StatefulWidget {
@@ -55,7 +56,7 @@ class _SplineChartState extends State<SplineChart> {
     chartDataIncome.clear();
     chartDataExpense.clear();
 
-    widget.transactions.forEach((element) {
+    for (var element in widget.transactions) {
       String formattedDate =
           getFormattedDate(widget.currIndex, element.createAt);
       if (element.category.type == 'Income') {
@@ -65,7 +66,10 @@ class _SplineChartState extends State<SplineChart> {
         chartDataExpense
             .add(ChartData(formattedDate, double.parse(element.amount)));
       }
-    });
+    }
+
+    // chartDataIncome.sort((a, b) => a.x.compareTo(b.x));
+    // chartDataExpense.sort((a, b) => a.x.compareTo(b.x));
   }
 
   String getFormattedDate(int index, DateTime dateTime) {
@@ -78,11 +82,9 @@ class _SplineChartState extends State<SplineChart> {
 
   @override
   Widget build(BuildContext context) {
-    print('rebuild');
-
     return SizedBox(
       width: double.infinity,
-      height: 350,
+      height: 380,
       child: SfCartesianChart(
         primaryXAxis: CategoryAxis(
           labelRotation: -45,
@@ -103,6 +105,7 @@ class _SplineChartState extends State<SplineChart> {
           SplineSeries<ChartData, String>(
             name: 'Income',
             color: Colors.green,
+            splineType: SplineType.cardinal,
             width: 5,
             dataSource: chartDataIncome,
             xValueMapper: (ChartData data, _) => data.x,
@@ -117,6 +120,7 @@ class _SplineChartState extends State<SplineChart> {
             name: 'Expense',
             width: 5,
             color: Colors.red,
+            splineType: SplineType.cardinal,
             dataSource: chartDataExpense,
             xValueMapper: (ChartData data1, _) => data1.x,
             yValueMapper: (ChartData data1, _) => data1.y!,

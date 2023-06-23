@@ -1,5 +1,6 @@
 import 'package:expanse_management/domain/models/transaction_model.dart';
 import 'package:hive/hive.dart';
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 
 int totals = 0;
@@ -195,7 +196,7 @@ String formatCurrency(int value) {
     locale: 'vi_VN', // Vietnamese locale for formatting
   );
 
-  return '${format.format(value)}vnđ'; // Append ' vnđ' to the formatted value
+  return '${format.format(value)}VND'; // Append ' vnđ' to the formatted value
 }
 
 String getFormattedDate(int index, DateTime selectedDate) {
