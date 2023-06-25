@@ -1,4 +1,5 @@
-import 'package:expanse_management/presentation/widgets/spline_chart.dart';
+import 'package:expanse_management/presentation/widgets/column_chart.dart';
+// import 'package:expanse_management/presentation/widgets/spline_chart.dart';
 import 'package:expanse_management/data/utilty.dart';
 import 'package:expanse_management/domain/models/transaction_model.dart';
 import 'package:flutter/material.dart';
@@ -214,13 +215,15 @@ class _StatisticsState extends State<Statistics> {
             const SizedBox(
               height: 20,
             ),
-            SplineChart(
-              transactions: currListTransaction,
-              currIndex: indexColor,
-            ),
+            // SplineChart(
+            //   transactions: currListTransaction,
+            //   currIndex: indexColor,
+            // ),
+            const ColumnChart(),
             const SizedBox(
               height: 20,
             ),
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Column(

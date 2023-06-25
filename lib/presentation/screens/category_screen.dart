@@ -15,7 +15,9 @@ class CategoryScreen extends StatefulWidget {
 
 class CategoryScreenState extends State<CategoryScreen> {
   late Box<CategoryModel> box;
-  List<CategoryModel> categories = [];
+  // List<CategoryModel> categories = [];
+  List<CategoryModel> expenseCategories = [];
+  List<CategoryModel> incomeCategories = [];
 
   @override
   void initState() {
@@ -30,11 +32,22 @@ class CategoryScreenState extends State<CategoryScreen> {
   }
 
   Future<void> fetchCategories() async {
-    categories = [
-      ...box.values.toList(),
-      ...defaultExpenseCategories,
+    expenseCategories = [
+      ...box.values.where((category) => category.type == 'Expense'),
+      ...defaultExpenseCategories
+    ];
+
+    incomeCategories = [
+      ...box.values.where((category) => category.type == 'Income'),
       ...defaultIncomeCategories
     ];
+
+    // categories = [
+    //   CategoryModel( 'Expense', , 'Header'),
+    //   ...expenseCategories,
+    //   CategoryModel( 'Income', 'Header'),
+    //   ...incomeCategories,
+    // ];
     setState(() {});
   }
 
@@ -45,25 +58,67 @@ class CategoryScreenState extends State<CategoryScreen> {
         backgroundColor: primaryColor,
         title: const Text('Categories'),
       ),
-      body: ListView.builder(
-        itemCount: categories.length,
-        itemBuilder: (context, index) {
-          final category = categories[index];
-          return ListTile(
-            leading:
-                Image.asset('images/${category.categoryImage}', height: 40),
-            title: Text(category.title),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      CategoryDetailsScreen(category: category),
-                ),
-              );
-            },
-          );
-        },
+      body: CustomScrollView(
+        slivers: [
+          const SliverToBoxAdapter(
+              child: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Text(
+              'Income',
+              style: TextStyle(fontSize: 17, color: Colors.green),
+            ),
+          )),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final category = incomeCategories[index];
+                return ListTile(
+                  leading: Image.asset('images/${category.categoryImage}',
+                      height: 40),
+                  title: Text(category.title),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            CategoryDetailsScreen(category: category),
+                      ),
+                    );
+                  },
+                );
+              },
+              childCount: incomeCategories.length,
+            ),
+          ),
+          const SliverToBoxAdapter(
+              child: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Text('Expense',
+                style: TextStyle(fontSize: 17, color: Colors.red)),
+          )),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final category = expenseCategories[index];
+                return ListTile(
+                  leading: Image.asset('images/${category.categoryImage}',
+                      height: 40),
+                  title: Text(category.title),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            CategoryDetailsScreen(category: category),
+                      ),
+                    );
+                  },
+                );
+              },
+              childCount: expenseCategories.length,
+            ),
+          ),
+        ],
       ),
     );
   }

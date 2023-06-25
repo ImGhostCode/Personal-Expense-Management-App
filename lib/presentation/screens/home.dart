@@ -184,7 +184,7 @@ Stack _head() {
           padding: const EdgeInsets.only(top: 100),
           child: Container(
             height: 180,
-            width: 330,
+            width: 360,
             decoration: BoxDecoration(
               boxShadow: const [
                 BoxShadow(

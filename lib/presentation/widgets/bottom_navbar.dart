@@ -41,7 +41,7 @@ class _BottomState extends State<Bottom> {
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         child: Padding(
-          padding: const EdgeInsets.only(top: 8, bottom: 8),
+          padding: const EdgeInsets.only(top: 10, bottom: 10),
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
             GestureDetector(
