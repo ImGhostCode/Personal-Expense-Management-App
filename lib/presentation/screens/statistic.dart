@@ -219,7 +219,10 @@ class _StatisticsState extends State<Statistics> {
             //   transactions: currListTransaction,
             //   currIndex: indexColor,
             // ),
-            const ColumnChart(),
+            ColumnChart(
+              transactions: currListTransaction,
+              currIndex: indexColor,
+            ),
             const SizedBox(
               height: 20,
             ),
