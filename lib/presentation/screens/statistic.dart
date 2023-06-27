@@ -1,3 +1,4 @@
+import 'package:expanse_management/presentation/widgets/circular_chart.dart';
 import 'package:expanse_management/presentation/widgets/column_chart.dart';
 // import 'package:expanse_management/presentation/widgets/spline_chart.dart';
 import 'package:expanse_management/data/utilty.dart';
@@ -28,10 +29,13 @@ class _StatisticsState extends State<Statistics> {
   late int totalIn;
   late int totalEx;
   late int total;
+
+  late bool isCircularChartSelected;
   @override
   void initState() {
     super.initState();
     notifier.value = 0;
+    isCircularChartSelected = false;
     box.listenable().addListener(updateNotifier);
     fetchTransactions();
   }
@@ -89,7 +93,7 @@ class _StatisticsState extends State<Statistics> {
         SliverToBoxAdapter(
           child: Column(children: [
             const SizedBox(
-              height: 20,
+              height: 15,
             ),
             const Text(
               'Statistics',
@@ -99,7 +103,7 @@ class _StatisticsState extends State<Statistics> {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Row(
@@ -149,7 +153,7 @@ class _StatisticsState extends State<Statistics> {
               ),
             ),
             const SizedBox(
-              height: 20,
+              height: 15,
             ),
             Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -212,19 +216,48 @@ class _StatisticsState extends State<Statistics> {
                     )
                   ],
                 )),
-            const SizedBox(
-              height: 20,
-            ),
+
             // SplineChart(
             //   transactions: currListTransaction,
             //   currIndex: indexColor,
             // ),
-            ColumnChart(
-              transactions: currListTransaction,
-              currIndex: indexColor,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Text('Categories Chart'),
+                  Switch(
+                    value: isCircularChartSelected,
+                    onChanged: (value) {
+                      setState(() {
+                        isCircularChartSelected = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
             ),
+            isCircularChartSelected
+                ? Column(
+                    children: [
+                      CircularChart(
+                          title: "Income",
+                          currIndex: indexColor,
+                          transactions: currListTransaction),
+                      CircularChart(
+                          title: "Expense",
+                          currIndex: indexColor,
+                          transactions: currListTransaction),
+                    ],
+                  )
+                : ColumnChart(
+                    transactions: currListTransaction,
+                    currIndex: indexColor,
+                  ),
+
             const SizedBox(
-              height: 20,
+              height: 15,
             ),
 
             Padding(

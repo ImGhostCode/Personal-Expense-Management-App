@@ -17,11 +17,7 @@ class _BottomState extends State<Bottom> {
   // ignore: non_constant_identifier_names
   List Screen = [
     const Home(),
-    const Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Statistics(),
-      // child: TestStatisticScreen(),
-    ),
+    const Statistics(),
     const CategoryScreen(),
     const SearchScreen()
   ];
@@ -41,7 +37,7 @@ class _BottomState extends State<Bottom> {
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         child: Padding(
-          padding: const EdgeInsets.only(top: 10, bottom: 10),
+          padding: const EdgeInsets.only(top: 5, bottom: 5),
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
             GestureDetector(
@@ -50,11 +46,22 @@ class _BottomState extends State<Bottom> {
                     indexColor = 0;
                   });
                 },
-                child: Icon(
-                  Icons.home,
-                  size: 30,
-                  color:
-                      indexColor == 0 ? const Color(0xff368983) : Colors.grey,
+                child: Container(
+                  height: 40,
+                  width: 80,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    // color: indexColor == index
+                    //     ? const Color.fromARGB(255, 47, 125, 121)
+                    //     : Colors.white,
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(
+                    Icons.home,
+                    size: 30,
+                    color:
+                        indexColor == 0 ? const Color(0xff368983) : Colors.grey,
+                  ),
                 )),
             GestureDetector(
                 onTap: () {
@@ -62,11 +69,22 @@ class _BottomState extends State<Bottom> {
                     indexColor = 1;
                   });
                 },
-                child: Icon(
-                  Icons.bar_chart_outlined,
-                  size: 30,
-                  color:
-                      indexColor == 1 ? const Color(0xff368983) : Colors.grey,
+                child: Container(
+                  height: 40,
+                  width: 80,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    // color: indexColor == index
+                    //     ? const Color.fromARGB(255, 47, 125, 121)
+                    //     : Colors.white,
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(
+                    Icons.bar_chart_outlined,
+                    size: 30,
+                    color:
+                        indexColor == 1 ? const Color(0xff368983) : Colors.grey,
+                  ),
                 )),
             const SizedBox(
               width: 20,
@@ -77,11 +95,22 @@ class _BottomState extends State<Bottom> {
                     indexColor = 2;
                   });
                 },
-                child: Icon(
-                  Icons.category_outlined,
-                  size: 30,
-                  color:
-                      indexColor == 2 ? const Color(0xff368983) : Colors.grey,
+                child: Container(
+                  height: 40,
+                  width: 80,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    // color: indexColor == index
+                    //     ? const Color.fromARGB(255, 47, 125, 121)
+                    //     : Colors.white,
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(
+                    Icons.category_outlined,
+                    size: 30,
+                    color:
+                        indexColor == 2 ? const Color(0xff368983) : Colors.grey,
+                  ),
                 )),
             GestureDetector(
                 onTap: () {
@@ -89,11 +118,19 @@ class _BottomState extends State<Bottom> {
                     indexColor = 3;
                   });
                 },
-                child: Icon(
-                  Icons.search_outlined,
-                  size: 30,
-                  color:
-                      indexColor == 3 ? const Color(0xff368983) : Colors.grey,
+                child: Container(
+                  height: 40,
+                  width: 80,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(
+                    Icons.search_outlined,
+                    size: 30,
+                    color:
+                        indexColor == 3 ? const Color(0xff368983) : Colors.grey,
+                  ),
                 )),
           ]),
         ),
