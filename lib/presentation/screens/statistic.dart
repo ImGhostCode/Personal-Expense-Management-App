@@ -93,7 +93,7 @@ class _StatisticsState extends State<Statistics> {
         SliverToBoxAdapter(
           child: Column(children: [
             const SizedBox(
-              height: 15,
+              height: 20,
             ),
             const Text(
               'Statistics',
@@ -103,7 +103,7 @@ class _StatisticsState extends State<Statistics> {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Row(
@@ -153,7 +153,7 @@ class _StatisticsState extends State<Statistics> {
               ),
             ),
             const SizedBox(
-              height: 15,
+              height: 10,
             ),
             Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -257,7 +257,7 @@ class _StatisticsState extends State<Statistics> {
                   ),
 
             const SizedBox(
-              height: 15,
+              height: 10,
             ),
 
             Padding(
