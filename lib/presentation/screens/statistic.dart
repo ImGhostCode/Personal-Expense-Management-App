@@ -1,3 +1,4 @@
+import 'package:expanse_management/Constants/color.dart';
 import 'package:expanse_management/presentation/widgets/circular_chart.dart';
 import 'package:expanse_management/presentation/widgets/column_chart.dart';
 // import 'package:expanse_management/presentation/widgets/spline_chart.dart';
@@ -17,7 +18,8 @@ class Statistics extends StatefulWidget {
 
 ValueNotifier<int> notifier = ValueNotifier<int>(0);
 
-class _StatisticsState extends State<Statistics> {
+class _StatisticsState extends State<Statistics>
+    with SingleTickerProviderStateMixin {
   final box = Hive.box<Transaction>('transactions');
 
   List day = ['Day', 'Week', 'Month', 'Year'];
@@ -30,12 +32,14 @@ class _StatisticsState extends State<Statistics> {
   late int totalEx;
   late int total;
 
+  late TabController _tabController;
   late bool isCircularChartSelected;
   @override
   void initState() {
     super.initState();
     notifier.value = 0;
     isCircularChartSelected = false;
+    _tabController = TabController(length: 2, vsync: this);
     box.listenable().addListener(updateNotifier);
     fetchTransactions();
   }
@@ -43,7 +47,7 @@ class _StatisticsState extends State<Statistics> {
   @override
   void dispose() {
     box.listenable().removeListener(updateNotifier);
-
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -185,7 +189,6 @@ class _StatisticsState extends State<Statistics> {
                                 }
                               });
                               fetchTransactions();
-                              // print(selectedDate);
                             },
                             icon: const Icon(Icons.arrow_back_ios_new)),
                         const SizedBox(
@@ -209,7 +212,6 @@ class _StatisticsState extends State<Statistics> {
                                 }
                                 fetchTransactions();
                               });
-                              // print(selectedDate);
                             },
                             icon: const Icon(Icons.arrow_forward_ios)),
                       ],
@@ -223,20 +225,24 @@ class _StatisticsState extends State<Statistics> {
             // ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Text('Categories Chart'),
-                  Switch(
-                    value: isCircularChartSelected,
-                    onChanged: (value) {
-                      setState(() {
-                        isCircularChartSelected = value;
-                      });
-                    },
-                  ),
+              child: TabBar(
+                controller: _tabController,
+                indicatorColor: primaryColor,
+                labelColor: primaryColor,
+                unselectedLabelColor: Colors.black,
+                tabs: const [
+                  Tab(text: 'Column'),
+                  Tab(text: 'Circular'),
                 ],
+                onTap: (index) {
+                  setState(() {
+                    isCircularChartSelected = index == 1;
+                  });
+                },
               ),
+            ),
+            const SizedBox(
+              height: 15,
             ),
             isCircularChartSelected
                 ? Column(

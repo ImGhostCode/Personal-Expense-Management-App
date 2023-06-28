@@ -161,7 +161,8 @@ class _AddScreenState extends State<AddScreen> {
             context: context,
             builder: (context) => AlertDialog(
               title: const Text('Warning'),
-              content: const Text('The amount exceeds the spending limit.'),
+              content: Text(
+                  'The amount exceeds the spending limit(${formatCurrency(limitPerExpense)}).'),
               actions: [
                 TextButton(
                   child: const Text('OK'),
@@ -186,7 +187,8 @@ class _AddScreenState extends State<AddScreen> {
             context: context,
             builder: (context) => AlertDialog(
               title: const Text('Warning'),
-              content: const Text('Total balance is less than the norm!'),
+              content: Text(
+                  'Total balance is less than ${formatCurrency(limitTotal)}!'),
               actions: [
                 TextButton(
                   child: const Text('OK'),

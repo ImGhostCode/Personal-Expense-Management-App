@@ -1,8 +1,7 @@
-import 'dart:ffi';
-
 import 'package:expanse_management/Constants/color.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import '../../domain/models/transaction_model.dart';
 
@@ -84,19 +83,18 @@ class _CircularChartState extends State<CircularChart> {
     if (widget.title == 'Income' && incomeData.isEmpty) {
       return SizedBox(
         width: double.infinity,
-        height: 50,
-        child: Container(
-          color: Colors.grey[300],
-          child: const Center(child: Text("No income")),
-        ),
+        height: 130,
+        child: Opacity(
+            opacity: 0.2, child: Image.asset('images/ChartIllustrator.png')),
       );
     } else if (widget.title == 'Expense' && expenseData.isEmpty) {
-      return SizedBox(
-        width: double.infinity,
-        height: 50,
-        child: Container(
-          color: Colors.grey[300],
-          child: const Center(child: Text("No expense")),
+      return Padding(
+        padding: const EdgeInsets.only(top: 30),
+        child: SizedBox(
+          width: double.infinity,
+          height: 130,
+          child: Opacity(
+              opacity: 0.2, child: Image.asset('images/ChartIllustrator.png')),
         ),
       );
     }

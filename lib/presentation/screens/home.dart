@@ -170,7 +170,7 @@ Stack _head() {
                       "Dashboard",
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 20,
+                        fontSize: 22,
                         color: Colors.white,
                       ),
                     ))
