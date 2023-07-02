@@ -38,6 +38,11 @@ cd Personal-Expense-Management-App
 3. Install the required dependencies.
 
 ```sh
+flutter pub get
+```
+4. Run the app on a connected device or emulator.
+
+```sh
 flutter run
 ```
 
