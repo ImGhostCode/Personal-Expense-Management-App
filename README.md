@@ -99,5 +99,18 @@ This Expenses Tracker App is licensed under the [MIT License](LICENSE). Feel fre
 
 For any questions, issues, or suggestions regarding the Expenses Tracker App, please contact our support team at [support@example.com](mailto:support@example.com).
 
+## Screenshot
 
+<img src="https://github.com/ImGhostCode/Personal-Expense-Management-App/assets/97029516/815f5d5e-f1ef-41a2-bd98-dcf4a8b13fc2" width="250" height="500">
 
+<img src="https://github.com/ImGhostCode/Personal-Expense-Management-App/assets/97029516/b56f0a6a-742f-485e-816b-d4f09ec4b0a7" width="250" height="500">
+
+<img src="https://github.com/ImGhostCode/Personal-Expense-Management-App/assets/97029516/81b5442a-e981-4ba5-aa6f-8853dad525dc" width="250" height="500">
+
+<img src="https://github.com/ImGhostCode/Personal-Expense-Management-App/assets/97029516/4b12edca-495d-404c-86a8-3d0b79e47cd7" width="250" height="500">
+
+<img src="https://github.com/ImGhostCode/Personal-Expense-Management-App/assets/97029516/4aafa9f2-18a3-48ad-8aeb-26511b3cdab8" width="250" height="500">
+
+<img src="https://github.com/ImGhostCode/Personal-Expense-Management-App/assets/97029516/6ffca4a6-b638-4e28-a759-df42f453e479" width="250" height="500">
+
+<img src="https://github.com/ImGhostCode/Personal-Expense-Management-App/assets/97029516/a978a651-76ee-4c57-a445-5aaece9beaf6" width="250" height="500">
