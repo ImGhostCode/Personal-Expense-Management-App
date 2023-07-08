@@ -99,7 +99,11 @@ This Expenses Tracker App is licensed under the [MIT License](LICENSE). Feel fre
 
 For any questions, issues, or suggestions regarding the Expenses Tracker App, please contact our support team at [support@example.com](mailto:support@example.com).
 
-## Screenshot
+## Screenshots
+
+<img src="https://github.com/ImGhostCode/Personal-Expense-Management-App/assets/97029516/d268bf4f-e6d0-4196-8c55-53b24091a539" width="250" height="500">
+
+<img src="https://github.com/ImGhostCode/Personal-Expense-Management-App/assets/97029516/3c36026c-3123-42c3-9098-a7ce9d57f67e" width="250" height="500"> 
 
 <img src="https://github.com/ImGhostCode/Personal-Expense-Management-App/assets/97029516/815f5d5e-f1ef-41a2-bd98-dcf4a8b13fc2" width="250" height="500">
 
